@@ -8,8 +8,8 @@ The player controls _one_ city with assets and capabilities.
   - Gold
   - Military
 - Capabilities
-  - Improve city
-  - Increase
+  - Upgrade city
+  - Increase military power
   - Attack other cities
 
 ## Gameplay
@@ -57,11 +57,10 @@ The server response is given below each respective user message.
     - `[city name],[city level],[distance to city]`
     - `[city name],[city level],[distance to city]`
     - ... (newline delimited)
-  - `GOLD`
-    - `GOLD [current gold amount]`
   - `CITY`
-    - `CITY LEVEL [current level]`
-    - `CITY LEVEL [current level]`
+    - `LEVEL [current city level]`
+    - `GOLD [current gold amount]`
+    - `ARMY [# of soliders in city]`
   - `UPGRADE COST`
     - `UPGRADE COST [gold to upgrade city]`
   - `UPGRADE`
