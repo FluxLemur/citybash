@@ -52,28 +52,36 @@ The player controls _one_ city with assets and capabilities.
 ## Server Interface
 The game runs as a server. Before play has begun, players connect to the server and give their city name. An adminitrator begins the game once all players are connected and ready. Once the game begins, the server sends a message to all players indicating the game has started. Players can send a selection of commands to list information about their city and the world, as well as commands to upgrade their city, train soldiers, and make attacks. Eventually, the server notifies all players that the game is over.
 
-The server response is given below each respective user message.
+The server response is given below each respective player message.
   - `WORLD`
-    - `[city name],[city level],[distance to city]`
-    - `[city name],[city level],[distance to city]`
+    - `[city name] [city level] [distance to city]`
+    - `[city name] [city level] [distance to city]`
     - ... (newline delimited)
   - `CITY`
     - `LEVEL [current city level]`
     - `GOLD [current gold amount]`
     - `ARMY [# of soliders in city]`
-  - `UPGRADE COST`
+  - `COSTS`
     - `UPGRADE COST [gold to upgrade city]`
+    - `TRAINING COST [gold to train soldier]`
   - `UPGRADE`
     - `UPGRADE SUCCESS` if current gold >= update cost
-    - `UPGRADE FAILURE` else
+    - `UPGRADE FAILURE` otherwise
   - `ATTACK [city-name] [# soldiers]`
     - `ATTACK [city-name] [# soldiers] SUCCESS` if city name valid and soldiers in [1, # soldiers in city]
-    - `ATTACK [city-name] [# soldiers] FAILURE` else
+    - `ATTACK [city-name] [# soldiers] FAILURE` otherwise
   - `TRAIN [# soldiers]`
     - `TRAIN [# soldiers] SUCCESS` if current gold >= cost of soldiers
-    - `TRAIN [# soldiers] FAILURE` else
+    - `TRAIN [# soldiers] FAILURE` otherwise
 
 ## Special Features in Development
 - Barbarians
   - Can players team up against one barbarian city?
 - Different types of military units
+
+## Implementation
+The engine is implemented in C++. We attempt to follow the
+[Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
+
+Simulations of the game mechanics are in Python. A guiding philosophy is that
+decisions should be "data-informed" rather than arbitrary.
