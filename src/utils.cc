@@ -24,7 +24,7 @@ static std::vector<std::string>& split_helper(const std::string &s, char delim,
     return elems;
 }
 
-std::vector<std::string> Utils::split(const std::string &s, char delim) {
+static std::vector<std::string> split(const std::string &s, char delim) {
     std::vector<std::string> elems;
     split_helper(s, delim, elems);
     return elems;
@@ -47,12 +47,18 @@ static inline std::string &rtrim(std::string &s) {
 }
 
 // trim from both ends
-std::string& Utils::trim(std::string &s) {
+static std::string& trim(std::string &s) {
   return ltrim(rtrim(s));
 }
 
 /* http://stackoverflow.com/questions/735204/convert-a-string-in-c-to-upper-case
  */
-void Utils::upper(std::string &str) {
+static void upper(std::string &str) {
   std::transform(str.begin(), str.end(),str.begin(), ::toupper);
+}
+
+std::vector<std::string> Utils::upper_trimmed_split(const std::string &str, char delimeter) {
+  std::string temp(str);
+  upper(temp);
+  return split(trim(temp), ' ');
 }

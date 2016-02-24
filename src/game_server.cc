@@ -17,16 +17,33 @@ GameServer::GameServer() {
   game_state_ = new GameState;
 }
 
-
 std::string GameServer::handle_client_rq(std::string request) {
-  Utils::upper(request);
-  std::vector<std::string> split_req = Utils::split(Utils::trim(request), ' ');
+  std::vector<std::string> split_req = Utils::upper_trimmed_split(request, ' ');
 
   if (split_req.size() == 0) {
     return Responses::INVALID;
   }
 
-  return split_req[0];
+  if (split_req[0].compare(Requests::WORLD) == 0) {
+    return Responses::NOT_IMPLEMENTED;
+
+  } else if (split_req[0].compare(Requests::CITY) == 0) {
+    return Responses::NOT_IMPLEMENTED;
+
+  } else if (split_req[0].compare(Requests::COSTS) == 0) {
+    return Responses::NOT_IMPLEMENTED;
+
+  } else if (split_req[0].compare(Requests::UPGRADE) == 0) {
+    return Responses::NOT_IMPLEMENTED;
+
+  } else if (split_req[0].compare(Requests::ATTACK) == 0) {
+    return Responses::NOT_IMPLEMENTED;
+
+  } else if (split_req[0].compare(Requests::TRAIN) == 0) {
+    return Responses::NOT_IMPLEMENTED;
+  }
+
+  return Responses::INVALID;
 }
 
 void GameServer::run() {

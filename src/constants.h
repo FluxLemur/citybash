@@ -10,14 +10,12 @@ class Requests {
   public:
     static const std::string WORLD;
     static const std::string CITY;
+    static const std::string COSTS;
+    static const std::string UPGRADE;
+    static const std::string ATTACK;
+    static const std::string TRAIN;
 };
 
-/*
-static const std::string COSTS = "COSTS";
-static const std::string UPGRADE = "UPGRADE";
-static const std::string ATTACK = "ATTACK";
-static const std::string TRAIN = "TRAIN";
-*/
 
 class Responses {
   public:

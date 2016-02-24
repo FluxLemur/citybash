@@ -7,9 +7,7 @@
 class Utils {
   public:
     static bool starts_with(std::string s1, std::string s2);
-    static std::vector<std::string> split(const std::string &s, char delimiter);
-    static std::string &trim(std::string &s);
-    static void upper(std::string &s);
+    static std::vector<std::string> upper_trimmed_split(const std::string &str, char delimeter);
 };
 
 #endif  // UTILS_H
