@@ -9,21 +9,11 @@
 #include <string>
 #include "game_state.h"
 
-
-#define PORT 12345
-#define BACKLOG 10
-
-
 class GameServer {
   private:
     GameState* game_state_;
-    static std::string welcome_;
-
-  public:
-    GameServer();
-
-    /* The server main loop. */
-    void run();
+    static std::string WELCOME_MESSAGE_;
+    static const int BACKLOG_ = 10;
 
     /* Handles a client request by calling the GameState.
      * The input may not be according to the server interface, yet the
@@ -33,6 +23,12 @@ class GameServer {
      * @returns response to the request
      */
     std::string handle_client_rq(std::string request);
+
+  public:
+    GameServer();
+
+    /* The server main loop. */
+    void run();
 };
 
 #endif // GAME_SERVER_H

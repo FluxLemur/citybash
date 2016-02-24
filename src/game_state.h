@@ -11,7 +11,7 @@ typedef int city_id;
 
 class GameState {
   private:
-    World* world;
+    World world;
 
   public:
     GameState();

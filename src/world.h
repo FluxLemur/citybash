@@ -13,10 +13,10 @@
 class World {
   private:
     int width;
-    std::vector<City*> cities;
+    std::vector<City> cities;
 
   public:
-    World(int width);
+    World(int width=100);
 };
 
 #endif // WORLD_H
