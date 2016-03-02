@@ -1,16 +1,15 @@
-CXX := g++
-CXXFLAGS := -O -std=c++11 -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings -Wswitch-default -Wswitch-enum -Wconversion -Wunreachable-code
-# for more info on flags: http://stackoverflow.com/questions/3375697/useful-gcc-flags-for-c
+CXX := clang++
+CXXFLAGS := -O -std=c++11 -Werror -Weverything -Wno-c++98-compat -Wno-global-constructors -Wno-exit-time-destructors -Wno-old-style-cast
 
 ALL_SRCS := $(wildcard src/*.cc)
 MAIN_SRCS := $(filter-out src/tests.cc, $(ALL_SRCS))
 TEST_SRCS := $(filter-out src/main.cc, $(ALL_SRCS))
 
 default:
-	$(CXX) $(MAIN_SRCS) -o citybash
+	$(CXX) $(CXXFLAGS) $(MAIN_SRCS) -o citybash
 
 testing:
-	$(CXX) $(TEST_SRCS) -o tests
+	$(CXX) $(CXXFLAGS) $(TEST_SRCS) -o tests
 
 run: default
 	./citybash

@@ -12,7 +12,7 @@
 
 class World {
   private:
-    int width;
+    int width_;
     std::vector<City> cities;
 
   public:

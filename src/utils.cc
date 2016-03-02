@@ -57,8 +57,15 @@ static void upper(std::string &str) {
   std::transform(str.begin(), str.end(),str.begin(), ::toupper);
 }
 
-std::vector<std::string> Utils::upper_trimmed_split(const std::string &str, char delimeter) {
+std::vector<std::string> Utils::upper_trimmed_split(const std::string &str) {
   std::string temp(str);
   upper(temp);
   return split(trim(temp), ' ');
+}
+
+bool Utils::is_number(const std::string& str)
+{
+    std::string::const_iterator it = str.begin();
+    while (it != str.end() && std::isdigit(*it)) ++it;
+    return !str.empty() && it == str.end();
 }

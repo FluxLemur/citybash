@@ -4,6 +4,11 @@
 #include <map>
 #include <string>
 
+// exit time destructor warnings:
+// http://stackoverflow.com/q/14335494/5610569
+#define CR_DEFINE_STATIC_LOCAL(type, name, arguments) \
+  static type& name = *new type arguments
+
 const int PORT = 12345;
 
 class Requests {
@@ -20,6 +25,9 @@ class Requests {
 class Responses {
   public:
     static const std::string INVALID;
+    static const std::string INVALID_CITY_HASH;
+    static const std::string INVALID_TRAIN;
+    static const std::string INVALID_ATTACK;
     static const std::string NOT_IMPLEMENTED;
 };
 

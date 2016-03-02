@@ -5,24 +5,28 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-#include "world.h"
+#include <map>
+#include <string>
 
-typedef int city_id;
+#include "city.h"
+#include "world.h"
 
 class GameState {
   private:
     World world;
 
+    /* The game state associates each city with a city_id */
+    std::map<city_id, City> city_map_;
+
   public:
     GameState();
 
-    /* Returns the ID of the created city, or -1 if creation fails. */
-    city_id add_random_city();
-
-    bool upgrade_city(city_id id);
-    bool train_soldiers(city_id id, int num_soldiers);
-    bool start_attack(city_id from_city, city_id to_city);
-    bool do_attack(int soldiers, city_id defending_city);
+    std::string get_world_info(city_id id);
+    std::string get_city_info(city_id id);
+    std::string get_costs_info(city_id id);
+    std::string upgrade_city(city_id id);
+    std::string train_soldiers(city_id id, int soldiers);
+    std::string start_attack(city_id from_city, std::string to_city, int soldiers);
 };
 
 

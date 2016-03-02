@@ -5,6 +5,8 @@
 #ifndef CITY_H
 #define CITY_H
 
+typedef int city_id;
+
 class City {
   private:
     int level;
