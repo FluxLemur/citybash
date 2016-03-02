@@ -53,13 +53,13 @@ static std::string& trim(std::string &s) {
 
 /* http://stackoverflow.com/questions/735204/convert-a-string-in-c-to-upper-case
  */
-static void upper(std::string &str) {
+void Utils::upper(std::string &str) {
   std::transform(str.begin(), str.end(),str.begin(), ::toupper);
 }
 
 std::vector<std::string> Utils::upper_trimmed_split(const std::string &str) {
   std::string temp(str);
-  upper(temp);
+  Utils::upper(temp);
   return split(trim(temp), ' ');
 }
 

@@ -16,17 +16,28 @@
 
 std::string GameServer::WELCOME_MESSAGE_ = "Welcome to CityBash!\n";
 
-GameServer::GameServer(std::string admin_hash) {
-  admin_hash_ = admin_hash;
+GameServer::GameServer(std::string admin_key) {
+  admin_key_ = admin_key;
 }
 
-std::string GameServer::handle_client_rq(std::string request) {
+std::string GameServer::handle_req_(std::string request) {
   std::vector<std::string> split_req = Utils::upper_trimmed_split(request);
 
-  if (split_req.size() < 2) {
+  if (split_req.size() < 1) {
     return Responses::INVALID;
   }
 
+  if (split_req[0].compare(admin_key_) == 0) {
+    return handle_admin_req_(split_req);
+  } else {
+    return handle_client_req_(split_req);
+  }
+}
+
+std::string GameServer::handle_client_req_(std::vector<std::string> split_req) {
+  if (split_req.size() < 2) {
+    return Responses::INVALID;
+  }
   std::string city_hash = split_req[0];
   city_id client_city_id;
 
@@ -70,6 +81,10 @@ std::string GameServer::handle_client_rq(std::string request) {
   }
 
   return Responses::INVALID;
+}
+
+std::string GameServer::handle_admin_req_(std::vector<std::string> split_req) {
+  return "Hello Administrator " + split_req[0] + "\n";
 }
 
 void GameServer::run() {
@@ -118,7 +133,7 @@ void GameServer::run() {
     buffer[n] = '\0';
     std::cout << buffer;
 
-    response = handle_client_rq(std::string(buffer));
+    response = handle_req_(std::string(buffer));
 
     // give client the response
     if (send(client, response.c_str(), response.size(), 0) < 0) {

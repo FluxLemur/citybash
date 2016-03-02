@@ -7,6 +7,7 @@
 #define GAME_SERVER_H
 
 #include <map>
+#include <vector>
 #include <string>
 
 #include "game_state.h"
@@ -17,7 +18,7 @@ class GameServer {
     GameState game_state_;
     static std::string WELCOME_MESSAGE_;
     static const int BACKLOG_ = 10;
-    std::string admin_hash_;
+    std::string admin_key_;
 
     /*
      * When a client communicates to the server, it prefixes its request with
@@ -32,16 +33,18 @@ class GameServer {
     std::map<std::string, city_id> client_city_hashes_;
 
     /* Handles a client request by calling the GameState.
-     * The input may not be according to the server interface, yet the
-     * output is.
-     *
-     * @parameter [request] from the client
-     * @returns response to the request
+     * Passed in is a sanitized version of the message received by the server.
      */
-    std::string handle_client_rq(std::string request);
+    std::string handle_client_req_(std::vector<std::string> split_req);
+
+    /* Handles an admin request. These requests are meta-game operations,
+     * such as starting the player connection phase, and the actual game start.
+     */
+    std::string handle_admin_req_(std::vector<std::string> split_req);
+    std::string handle_req_(std::string request);
 
   public:
-    GameServer(std::string admin_hash);
+    GameServer(std::string admin_key);
 
     /* The server main loop. */
     [[noreturn]] void run();
