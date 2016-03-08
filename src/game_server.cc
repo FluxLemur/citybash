@@ -20,6 +20,11 @@ GameServer::GameServer(std::string admin_key) {
   admin_key_ = admin_key;
 }
 
+/**
+ * Sanitizes a message received by the server.
+ * If the first element is the admin key, then handles an admin request.
+ * Otherwise, handles input as a client/player request.
+ */
 std::string GameServer::handle_req_(std::string request) {
   std::vector<std::string> split_req = Utils::upper_trimmed_split(request);
 
@@ -28,17 +33,23 @@ std::string GameServer::handle_req_(std::string request) {
   }
 
   if (split_req[0].compare(admin_key_) == 0) {
+    split_req.erase(split_req.begin());
     return handle_admin_req_(split_req);
   } else {
     return handle_client_req_(split_req);
   }
 }
 
+/**
+ * Finds the corresponding city belonging to the client, and passes on the
+ * command (potentially with other arguments) to the game state.
+ */
 std::string GameServer::handle_client_req_(std::vector<std::string> split_req) {
   if (split_req.size() < 2) {
     return Responses::INVALID;
   }
   std::string city_hash = split_req[0];
+  split_req.erase(split_req.begin());
   city_id client_city_id;
 
   std::map<std::string, city_id>::iterator city_id_it;
@@ -49,42 +60,18 @@ std::string GameServer::handle_client_req_(std::vector<std::string> split_req) {
     client_city_id = city_id_it->second;
   }
 
-  std::string commmand = split_req[1];
+  std::string command = split_req[0];
+  split_req.erase(split_req.begin());
 
-  if (commmand.compare(Requests::WORLD) == 0) {
-    return game_state_.get_world_info(client_city_id);
-
-  } else if (commmand.compare(Requests::CITY) == 0) {
-    return game_state_.get_city_info(client_city_id);
-
-  } else if (commmand.compare(Requests::COSTS) == 0) {
-    return game_state_.get_costs_info(client_city_id);
-
-  } else if (commmand.compare(Requests::UPGRADE) == 0) {
-    return game_state_.upgrade_city(client_city_id);
-
-  } else if (commmand.compare(Requests::TRAIN) == 0) {
-    if (split_req.size() < 3 || !Utils::is_number(split_req[2])) {
-      return Responses::INVALID_TRAIN;
-    } else {
-      int num_soldiers = std::stoi(split_req[2], nullptr, 10);
-      return game_state_.train_soldiers(client_city_id, num_soldiers);
-    }
-
-  } else if (commmand.compare(Requests::ATTACK) == 0) {
-    if (split_req.size() < 4 || !Utils::is_number(split_req[3])) {
-      return Responses::INVALID_ATTACK;
-    } else {
-      int num_soldiers = std::stoi(split_req[3], nullptr, 10);
-      return game_state_.start_attack(client_city_id, split_req[2], num_soldiers);
-    }
-  }
-
-  return Responses::INVALID;
+  return game_state_.player_request(command, client_city_id, split_req);
 }
 
 std::string GameServer::handle_admin_req_(std::vector<std::string> split_req) {
-  return "Hello Administrator " + split_req[0] + "\n";
+  if (split_req.size() == 0) {
+    return Responses::INVALID;
+  }
+
+  return game_state_.admin_request(split_req[0]);
 }
 
 void GameServer::run() {

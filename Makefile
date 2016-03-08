@@ -1,5 +1,5 @@
 CXX := clang++
-CXXFLAGS := -O -std=c++11 -Werror -Weverything -Wno-c++98-compat -Wno-global-constructors -Wno-exit-time-destructors -Wno-old-style-cast
+CXXFLAGS := -O -std=c++11 -Werror -Weverything -Wno-c++98-compat -Wno-global-constructors -Wno-exit-time-destructors -Wno-old-style-cast -Wno-c++98-compat-pedantic
 
 ALL_SRCS := $(wildcard src/*.cc)
 MAIN_SRCS := $(filter-out src/tests.cc, $(ALL_SRCS))
@@ -10,9 +10,6 @@ default:
 
 testing:
 	$(CXX) $(CXXFLAGS) $(TEST_SRCS) -o tests
-
-run: default
-	./citybash
 
 tests: testing
 	./tests
