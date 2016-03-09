@@ -69,3 +69,17 @@ bool Utils::is_number(const std::string& str)
     while (it != str.end() && std::isdigit(*it)) ++it;
     return !str.empty() && it == str.end();
 }
+
+// http://stackoverflow.com/a/440240/5610569
+static const char alphanum[] =
+  "0123456789"
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+std::string Utils::random_upper_alphanum(const int len) {
+  std::string s = "";
+  for (int i = 0; i < len; ++i) {
+      s += alphanum[(unsigned int) (std::rand()) % (sizeof(alphanum) - 1)];
+  }
+
+  return s;
+}

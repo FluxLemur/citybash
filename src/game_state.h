@@ -110,6 +110,7 @@ class GameState {
 
   public:
     GameState();
+    static const int KEY_LENGTH = 10;
 
     std::string admin_request(std::string command);
     std::string player_request(std::vector<std::string> split_req);

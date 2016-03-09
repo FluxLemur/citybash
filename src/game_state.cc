@@ -38,7 +38,12 @@ void GameState::generate_world() {
 }
 
 std::string GameState::generate_key() {
-  return "ASDF";
+  std::string key = "";
+  do {
+    key = Utils::random_upper_alphanum(KEY_LENGTH);
+  } while (city_map_.find(key) != city_map_.end());
+
+  return key;
 }
 
 
