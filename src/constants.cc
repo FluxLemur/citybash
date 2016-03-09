@@ -8,11 +8,11 @@ const std::string Requests::ATTACK = "ATTACK";
 const std::string Requests::TRAIN = "TRAIN";
 
 const std::string Responses::INVALID = "INVALID REQUEST\n";
-const std::string Responses::INVALID_CITY_HASH = "INVALID CITY HASH\n";
+const std::string Responses::INVALID_PLAYER_KEY = "INVALID PLAYER KEY\n";
 const std::string Responses::INVALID_TRAIN =
                   "INVALID TRAIN."
-                  "USAGE: [city hash] TRAIN [# soldiers]\n";
+                  "VALID: [city hash] TRAIN [# soldiers]\n";
 const std::string Responses::INVALID_ATTACK =
                   "INVALID ATTACK."
-                  "USAGE: [city hash] ATTACK [other city name] [# soldiers]\n";
+                  "VALID: [city hash] ATTACK [other city name] [# soldiers]\n";
 const std::string Responses::NOT_IMPLEMENTED = "NOT IMPLEMENTED\n";

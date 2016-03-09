@@ -28,50 +28,15 @@ GameServer::GameServer(std::string admin_key) {
 std::string GameServer::handle_req_(std::string request) {
   std::vector<std::string> split_req = Utils::upper_trimmed_split(request);
 
-  if (split_req.size() < 1) {
-    return Responses::INVALID;
+  if (split_req.size() < 2) {
+    return "INVALID: [" + Utils::trim(request) + "]\nVALID:\n  [player key] [command]\n";
   }
 
   if (split_req[0].compare(admin_key_) == 0) {
-    split_req.erase(split_req.begin());
-    return handle_admin_req_(split_req);
+    return game_state_.admin_request(split_req[1]);
   } else {
-    return handle_client_req_(split_req);
+    return game_state_.player_request(split_req);
   }
-}
-
-/**
- * Finds the corresponding city belonging to the client, and passes on the
- * command (potentially with other arguments) to the game state.
- */
-std::string GameServer::handle_client_req_(std::vector<std::string> split_req) {
-  if (split_req.size() < 2) {
-    return Responses::INVALID;
-  }
-  std::string city_hash = split_req[0];
-  split_req.erase(split_req.begin());
-  city_id client_city_id;
-
-  std::map<std::string, city_id>::iterator city_id_it;
-  city_id_it = client_city_hashes_.find(city_hash);
-  if (city_id_it == client_city_hashes_.end()) {
-    return Responses::INVALID_CITY_HASH;
-  } else {
-    client_city_id = city_id_it->second;
-  }
-
-  std::string command = split_req[0];
-  split_req.erase(split_req.begin());
-
-  return game_state_.player_request(command, client_city_id, split_req);
-}
-
-std::string GameServer::handle_admin_req_(std::vector<std::string> split_req) {
-  if (split_req.size() == 0) {
-    return Responses::INVALID;
-  }
-
-  return game_state_.admin_request(split_req[0]);
 }
 
 void GameServer::run() {
@@ -102,8 +67,6 @@ void GameServer::run() {
   std::string response;
 
   for(;;) {
-    std::cout << "waiting for client..." << std::endl;
-
     client_sock_size = sizeof(client_addr);
     int client = accept(sockfd, (struct sockaddr *) (&client_addr), &client_sock_size);
     if (send(client, WELCOME_MESSAGE_.c_str(), WELCOME_MESSAGE_.size(), 0) < 0) {

@@ -50,29 +50,38 @@ The player controls _one_ city with assets and capabilities.
   - Armies move 1 distance unit/sec
 
 ## Server Interface
-The game runs as a server. Before play has begun, players connect to the server and give their city name. An adminitrator begins the game once all players are connected and ready. Once the game begins, the server sends a message to all players indicating the game has started. Players can send a selection of commands to list information about their city and the world, as well as commands to upgrade their city, train soldiers, and make attacks. Eventually, the server notifies all players that the game is over.
+The game runs as a server. An administrator first initiates the "Player Joining
+Phase". The administrator then gives each player a unique key which the player
+then uses to join the game with the following command:
+  - `[player key] [city name]`
 
-The server response is given below each respective player message. Note that every command must begin with the player's hash, given to them when they first join the game.
-  - `[city hash] WORLD`
+Once the game begins, players can send a selection of commands to list
+information about their city and the world, as well as commands to upgrade
+their city, train soldiers, and make attacks.
+
+When the game is over, the server will reject player commands.
+
+The server response is given below each respective player message.
+  - `[player key] WORLD`
     - `[city name] [city level] [distance to city]`
     - `[city name] [city level] [distance to city]`
     - ... (newline delimited)
-  - `[city hash] CITY`
+  - `[player key] CITY`
     - `LEVEL [current city level]`
     - `GOLD [current gold amount]`
     - `ARMY [# of soliders in city]`
-  - `[city hash] COSTS`
+  - `[player key] COSTS`
     - `UPGRADE COST [gold to upgrade city]`
     - `TRAINING COST [gold to train soldier]`
-  - `[city hash] UPGRADE`
+  - `[player key] UPGRADE`
     - `UPGRADE SUCCESS` if current gold >= update cost
     - `UPGRADE FAILURE` otherwise
-  - `[city hash] TRAIN [# soldiers]`
+  - `[player key] TRAIN [# soldiers]`
     - `TRAIN [# soldiers] SUCCESS` if current gold >= cost of soldiers
-    - `INVALID TRAIN. USAGE: [city hash] TRAIN [# soldiers]` otherwise
-  - `[city hash] ATTACK [city-name] [# soldiers]`
+    - `INVALID TRAIN. USAGE: [player key] TRAIN [# soldiers]` otherwise
+  - `[player key] ATTACK [city-name] [# soldiers]`
     - `ATTACK [city-name] [# soldiers] SUCCESS` if city name valid and soldiers in [1, # soldiers in city]
-    - `INVALID ATTACK. USAGE: [city hash] ATTACK [other city name] [# soldiers]\n`
+    - `INVALID ATTACK. USAGE: [player key] ATTACK [other city name] [# soldiers]\n`
 
 ## Special Features in Development
 - Barbarians

@@ -47,7 +47,7 @@ static inline std::string &rtrim(std::string &s) {
 }
 
 // trim from both ends
-static std::string& trim(std::string &s) {
+std::string& Utils::trim(std::string &s) {
   return ltrim(rtrim(s));
 }
 

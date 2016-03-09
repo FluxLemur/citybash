@@ -20,17 +20,26 @@
  *
  *  PLAYER_JOIN
  *   - START_GAME: generates the world and commences PLAYING state
+ *   - NEW_KEY: generate a new, unique player key
  *   - PLAYERS: return players who have joined
  *   - SERVER_INFO: (same as in ADMIN_WAIT)
  *
  *  PLAYING
  *   - STATS: give for each city its gold, gold/sec, level, and army size
- *   - MAP: return a coordinate list of the cities by id,name
+ *   - MAP: return a coordinate list of the cities by name
  *   - FORCE_FINISH: forces the game to stop, commencing FINISHED state
  *
  *  FINISHED
  *   - LEADERBOARD: return the player rankings for the game just played
  *   - TERMINATE: signals the server to terminate
+ *
+ *
+ * Valid Player commands for each (relevant) state are:
+ *  PLAYER_JOIN
+ *   - [player key] [city name]
+ *
+ *  PLAYING
+ *   - (see README)
  */
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
@@ -50,10 +59,18 @@ class GameState {
       FINISHED,
     };
     PlayState state_;
-    World world;
+    World world_;
+    void generate_world();
+    std::string generate_key();
 
-    /* The game state associates each city with a city_id */
-    std::map<city_id, City> city_map_;
+    /*
+     * A player prefixes their request with their player key, assigned by the
+     * admin at start of the game. These keys map to their city id. This
+     * attempts to enforce authenticy of players, so a player cannot spoof
+     * another city.
+     * TODO: Consider message encryption
+     */
+    std::map<std::string, city_id> city_map_;
 
     std::string invalid_command(std::string command,
         std::vector<std::string> valid_commands);
@@ -62,6 +79,7 @@ class GameState {
     static std::string SERVER_INFO;
     static std::string START_GAME;
     static std::string PLAYERS;
+    static std::string NEW_KEY;
     static std::string STATS;
     static std::string MAP;
     static std::string FORCE_FINISH;
@@ -72,25 +90,29 @@ class GameState {
     std::string admin_server_info();
     std::string admin_start_game();
     std::string admin_players();
+    std::string admin_new_key();
     std::string admin_stats();
     std::string admin_map();
     std::string admin_force_finish();
     std::string admin_leaderboard();
     std::string admin_terminate();
 
-    std::string get_world_info(city_id id);
-    std::string get_city_info(city_id id);
-    std::string get_costs_info(city_id id);
-    std::string upgrade_city(city_id id);
-    std::string train_soldiers(city_id id, int soldiers);
-    std::string start_attack(city_id from_city, std::string to_city, int soldiers);
+    static std::string PLAYER_VALID_COMMANDS;
+    city_id city_id_for_key(std::string player_key);
+
+    std::string player_join(city_id id, std::string city_name);
+    std::string player_world(city_id id);
+    std::string player_city(city_id id);
+    std::string player_costs(city_id id);
+    std::string player_upgrade(city_id id);
+    std::string player_train(city_id id, int soldiers);
+    std::string player_attack(city_id from_city, std::string to_city, int soldiers);
 
   public:
     GameState();
 
     std::string admin_request(std::string command);
-    std::string player_request(std::string command, city_id id,
-        std::vector<std::string> args);
+    std::string player_request(std::vector<std::string> split_req);
 
 };
 

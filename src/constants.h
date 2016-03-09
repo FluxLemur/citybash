@@ -25,7 +25,7 @@ class Requests {
 class Responses {
   public:
     static const std::string INVALID;
-    static const std::string INVALID_CITY_HASH;
+    static const std::string INVALID_PLAYER_KEY;
     static const std::string INVALID_TRAIN;
     static const std::string INVALID_ATTACK;
     static const std::string NOT_IMPLEMENTED;
