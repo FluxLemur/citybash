@@ -12,7 +12,6 @@
 #include "game_state.h"
 #include "utils.h"
 
-#define BUFLEN 25
 
 std::string GameServer::WELCOME_MESSAGE_ = "Welcome to CityBash!\n";
 
@@ -28,6 +27,10 @@ GameServer::GameServer(std::string admin_key) {
 std::string GameServer::handle_req_(std::string request) {
   std::vector<std::string> split_req = Utils::upper_trimmed_split(request);
 
+  if (split_req.size() > 1 && split_req[0].compare("CLIENT_HELLO") == 0) {
+    return "Hello from CityBash Server\n";
+  }
+
   if (split_req.size() < 2) {
     return "INVALID: [" + Utils::trim(request) + "]\nVALID:\n  [player key] [command]\n";
   }
@@ -39,6 +42,7 @@ std::string GameServer::handle_req_(std::string request) {
   }
 }
 
+static const unsigned int buffer_length = 100;
 void GameServer::run() {
   // initialize and configure the server's one socket
   int sockfd;
@@ -62,26 +66,23 @@ void GameServer::run() {
   std::cout << "CityBash server is running at port " << PORT << std::endl;
 
   int client_addr;
-	socklen_t client_sock_size;
-  char buffer[25];
+  socklen_t client_sock_size;
+  char buffer[buffer_length];
   std::string response;
 
   for(;;) {
     client_sock_size = sizeof(client_addr);
     int client = accept(sockfd, (struct sockaddr *) (&client_addr), &client_sock_size);
-    if (send(client, WELCOME_MESSAGE_.c_str(), WELCOME_MESSAGE_.size(), 0) < 0) {
-      perror("send welcome");
-    }
 
     // receive a message
-    int n = read(client, buffer, BUFLEN);
+    int n = read(client, buffer, buffer_length);
     if (n < 0) {
       perror("read");
-    } else if (n == BUFLEN) {
-      n = BUFLEN - 1;
+    } else if (n == int(buffer_length)) {
+      n = int(buffer_length) - 1;
     }
     buffer[n] = '\0';
-    std::cout << buffer;
+    std::cout << buffer << std::flush;
 
     response = handle_req_(std::string(buffer));
 

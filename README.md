@@ -50,16 +50,13 @@ The player controls _one_ city with assets and capabilities.
   - Armies move 1 distance unit/sec
 
 ## Server Interface
-The game runs as a server. An administrator first initiates the "Player Joining
-Phase". The administrator then gives each player a unique key which the player
-then uses to join the game with the following command:
-  - `[player key] [city name]`
+The game runs as a server. The administrator first gives each player a unique
+key which the player uses to join the game with the following command:
+  - `[player key] join [city name]`
 
 Once the game begins, players can send a selection of commands to list
 information about their city and the world, as well as commands to upgrade
 their city, train soldiers, and make attacks.
-
-When the game is over, the server will reject player commands.
 
 The server response is given below each respective player message.
   - `[player key] WORLD`
@@ -83,14 +80,16 @@ The server response is given below each respective player message.
     - `ATTACK [city-name] [# soldiers] SUCCESS` if city name valid and soldiers in [1, # soldiers in city]
     - `INVALID ATTACK. USAGE: [player key] ATTACK [other city name] [# soldiers]\n`
 
+When the game is over, the server rejects player commands, and the
+administrator can announce the results.
+
 ## Special Features in Development
-- Barbarians
-  - Can players team up against one barbarian city?
+- Barbarian cities
 - Different types of military units
 
 ## Implementation
 The engine is implemented in C++. We attempt to follow the
 [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 
-Simulations of the game mechanics are in Python. A guiding philosophy is that
-decisions should be "data-informed" rather than arbitrary.
+Simulations of the game mechanics are in Python (see `simulations/`). A guiding
+philosophy is that decisions should be "data-informed" rather than arbitrary.

@@ -7,7 +7,7 @@
 #include "utils.h"
 
 GameState::GameState() {
-  state_ = PlayState::ADMIN_WAIT;
+  state_ = PlayState::PLAYER_JOIN;
 }
 
 /******************************************************************************/
@@ -50,11 +50,10 @@ std::string GameState::generate_key() {
 /******************************************************************************/
 // Admin Requests
 /******************************************************************************/
-std::string GameState::PLAYER_JOIN_REQ = "PLAYER_JOIN";
-std::string GameState::SERVER_INFO = "SERVER_INFO";
 std::string GameState::START_GAME = "START_GAME";
 std::string GameState::PLAYERS = "PLAYERS";
-std::string GameState::NEW_KEY = "NEW_KEY";
+std::string GameState::SERVER_INFO = "SERVER_INFO";
+std::string GameState::KEY = "KEY";
 std::string GameState::STATS = "STATS";
 std::string GameState::MAP = "MAP";
 std::string GameState::FORCE_FINISH = "FORCE_FINISH";
@@ -63,14 +62,6 @@ std::string GameState::TERMINATE = "TERMINATE";
 
 std::string GameState::admin_request(std::string command) {
   switch (state_) {
-    case ADMIN_WAIT:
-      if (command.compare(PLAYER_JOIN_REQ) == 0) {
-        return admin_player_join();
-      } else if (command.compare(SERVER_INFO) == 0) {
-        return admin_server_info();
-      } else {
-        return invalid_command(command, {PLAYER_JOIN_REQ, SERVER_INFO});
-      }
     case PLAYER_JOIN:
       if (command.compare(START_GAME) == 0) {
         return admin_start_game();
@@ -78,11 +69,11 @@ std::string GameState::admin_request(std::string command) {
         return admin_players();
       } else if (command.compare(SERVER_INFO) == 0) {
         return admin_server_info();
-      } else if (command.compare(NEW_KEY) == 0) {
-        return admin_new_key();
+      } else if (command.compare(KEY) == 0) {
+        return admin_key();
       } else {
         return invalid_command(command,
-            {START_GAME, PLAYERS, SERVER_INFO, NEW_KEY});
+            {START_GAME, PLAYERS, SERVER_INFO, KEY});
       }
     case PLAYING:
       if (command.compare(STATS) == 0) {
@@ -105,16 +96,6 @@ std::string GameState::admin_request(std::string command) {
   }
 }
 
-std::string GameState::admin_player_join() {
-  std::cout << "** STARTING PLAYER JOIN STATE **\n";
-  state_ = PlayState::PLAYER_JOIN;
-  return PLAYER_JOIN_REQ + ": SUCCESS\n";
-}
-
-std::string GameState::admin_server_info() {
-  return SERVER_INFO + ": TODO\n";
-}
-
 std::string GameState::admin_start_game() {
   std::cout << "** STARTING GAME **\n";
   generate_world();
@@ -124,7 +105,7 @@ std::string GameState::admin_start_game() {
 
 std::string GameState::admin_players() {
   std::map<std::string, city_id>::iterator it;
-  std::string curr_players = "key city_name\n";
+  std::string curr_players = "key        city_name\n";
   for (it = city_map_.begin(); it != city_map_.end(); it++) {
     curr_players += it->first + " ";
     curr_players += world_.name_of(it->second) + "\n";
@@ -132,11 +113,15 @@ std::string GameState::admin_players() {
   return curr_players;
 }
 
-std::string GameState::admin_new_key() {
+std::string GameState::admin_server_info() {
+  return SERVER_INFO + ": TODO\n";
+}
+
+std::string GameState::admin_key() {
   std::string key = generate_key();
   city_map_.insert(
       std::pair<std::string, city_id>(key, City::get_next_city_id()));
-  return NEW_KEY + ": " + key + "\n";
+  return "NEW KEY: " + key + "\n";
 }
 
 std::string GameState::admin_stats() {
@@ -196,16 +181,14 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
   std::string command = split_req[1];
 
   switch (state_) {
-    case ADMIN_WAIT:
-      return "ERROR: please wait for administrator to start PLAYER JOIN phase\n";
     case PLAYER_JOIN:
-      if (split_req.size() != 2) {
-        return "ERROR: use valid join syntax: [player key] [city_name_no_spaces]\n";
+      if (split_req.size() != 3 || command.compare(Requests::JOIN) != 0) {
+        return "INVALID SYNTAX\nVALID: [player key] JOIN [city_name_no_spaces]\n";
       } else {
         if (id == City::INVALID_CITY) {
           return "INVALID PLAYER KEY: [" + player_key + "]\n";
         } else {
-          return player_join(id, command);
+          return player_join(id, split_req[2]);
         }
       }
     case PLAYING:
@@ -251,7 +234,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
 std::string GameState::player_join(city_id id, std::string city_name) {
   switch (world_.add_city(id, city_name)) {
     case World::AddCityResponse::SUCCESS:
-      std::cout << id << " has joined as " << city_name << std::endl;
+      std::cout << "** " << city_name << " has joined (id " << id << ") **" << std::endl;
       return "The city of " + city_name + " is welcomed warmly to CityBash!\n";
     case World::AddCityResponse::CITY_EXISTS:
       return "ERROR: your player key already been used.\n";
@@ -261,31 +244,32 @@ std::string GameState::player_join(city_id id, std::string city_name) {
 }
 
 std::string GameState::player_world(city_id id) {
-  std::cout << id << std::endl;
+  std::cout << id << " world" << std::endl;
   return Responses::NOT_IMPLEMENTED;
 }
 
 std::string GameState::player_city(city_id id) {
-  std::cout << id << std::endl;
+  std::cout << id << " city" << std::endl;
   return Responses::NOT_IMPLEMENTED;
 }
 
 std::string GameState::player_costs(city_id id) {
-  std::cout << id << std::endl;
+  std::cout << id << " costs"<< std::endl;
   return Responses::NOT_IMPLEMENTED;
 }
 
 std::string GameState::player_upgrade(city_id id) {
-  std::cout << id << std::endl;
+  std::cout << id << " upgrade" << std::endl;
   return Responses::NOT_IMPLEMENTED;
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {
-  std::cout << id << soldiers << std::endl;
+  std::cout << id << " train "<< soldiers << std::endl;
   return Responses::NOT_IMPLEMENTED;
 }
 
 std::string GameState::player_attack(city_id from_city, std::string to_city, int soldiers) {
-  std::cout << from_city << to_city << soldiers << std::endl;
+  std::cout << from_city << " attack " << to_city;
+  std::cout << " with " << soldiers << " soldiers" << std::endl;
   return Responses::NOT_IMPLEMENTED;
 }

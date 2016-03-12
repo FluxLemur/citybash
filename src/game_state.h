@@ -3,10 +3,8 @@
  *  i.e. Initialization, actions done in cities, attacks, etc.
  *
  * The game is a state machine with the following states/transisions:
- *  ADMIN_WAIT: the initial state, waiting for the admin to join and send
- *              [PLAYER_JOIN] to start that phase
- *  PLAYER_JOIN: in this state, players can connect to the game by sending
- *              their unique key (so each player signs up once) and their
+ *  PLAYER_JOIN: players can connect to the game by sending
+ *              their unique key (each player can only sign up once) and their
  *              city name. Admin must send [START_GAME] to proceed.
  *  PLAYING: the world is generated and the game commences, players are
  *           allowed to send the regular game commands.
@@ -14,13 +12,9 @@
  *            conditions as stated in the README.
  *
  * Valid Admin commands for each state are:
- *  ADMIN_WAIT
- *   - PLAYER_JOIN: commences PLAYER_JOIN state
- *   - SERVER_INFO: gives useful information about the game server, TDB
- *
  *  PLAYER_JOIN
  *   - START_GAME: generates the world and commences PLAYING state
- *   - NEW_KEY: generate a new, unique player key
+ *   - KEY: generate a new, unique player key
  *   - PLAYERS: return players who have joined
  *   - SERVER_INFO: (same as in ADMIN_WAIT)
  *
@@ -36,7 +30,7 @@
  *
  * Valid Player commands for each (relevant) state are:
  *  PLAYER_JOIN
- *   - [player key] [city name]
+ *   - [player key] join [city name]
  *
  *  PLAYING
  *   - (see README)
@@ -53,7 +47,6 @@
 class GameState {
   private:
     enum PlayState {
-      ADMIN_WAIT,
       PLAYER_JOIN,
       PLAYING,
       FINISHED,
@@ -75,22 +68,20 @@ class GameState {
     std::string invalid_command(std::string command,
         std::vector<std::string> valid_commands);
 
-    static std::string PLAYER_JOIN_REQ;
     static std::string SERVER_INFO;
     static std::string START_GAME;
     static std::string PLAYERS;
-    static std::string NEW_KEY;
+    static std::string KEY;
     static std::string STATS;
     static std::string MAP;
     static std::string FORCE_FINISH;
     static std::string LEADERBOARD;
     static std::string TERMINATE;
 
-    std::string admin_player_join();
     std::string admin_server_info();
     std::string admin_start_game();
     std::string admin_players();
-    std::string admin_new_key();
+    std::string admin_key();
     std::string admin_stats();
     std::string admin_map();
     std::string admin_force_finish();

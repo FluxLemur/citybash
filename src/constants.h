@@ -13,6 +13,7 @@ const int PORT = 12345;
 
 class Requests {
   public:
+    static const std::string JOIN;
     static const std::string WORLD;
     static const std::string CITY;
     static const std::string COSTS;
