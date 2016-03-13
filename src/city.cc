@@ -28,3 +28,17 @@ bool City::upgrade() {
 std::string City::get_name() {
   return name_;
 }
+
+void City::set_location(Location* l) {
+  loc_ = l;
+}
+
+Location City::get_location() {
+  return *loc_;
+}
+
+void City::add_neighbor(City* neighbor, float distance) {
+  neighbors_.insert(std::pair<City*, float>(neighbor, distance));
+}
+
+std::string display_neighbors();

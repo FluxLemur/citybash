@@ -83,3 +83,11 @@ std::string Utils::random_upper_alphanum(const int len) {
 
   return s;
 }
+
+int Utils::random_int(const int max) {
+  if (max <= 0) {
+    return 0;
+  }
+
+  return int(std::rand() % max);
+}

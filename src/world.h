@@ -13,31 +13,42 @@
 #include <vector>
 
 #include "city.h"
+#include "location.h"
 
 class World {
   private:
     int width_;
     std::map<city_id, City*> city_map_;
     std::set<std::string> city_names_;
+    std::map<Location*, City*> city_locations_;
+
+    void randomly_place_cities();
+    void generate_pairwise_distances();
 
   public:
     World(int width=100);
+    ~World();
     enum AddCityResponse {
       NAME_EXISTS,
       CITY_EXISTS,
       SUCCESS
     };
 
-    /* Attempts to add a city to the world with a given name.
-     * If a city with such a name already exists, the city is not
-     * added and the function returns false.
-     * Otherwise, the city is added to the world, and true is returned.
+    /* Attempts to add a city to the world with a given name. If a city with
+     * such a name already exists, the city is not added and the function
+     * returns false. Otherwise, the city is added to the world, and true is
+     * returned.
      */
     AddCityResponse add_city(city_id id, std::string name);
 
-    /* returns the name of city with given id.
+    /* Returns the name of city with given id.
      */
     std::string name_of(city_id id);
+
+    /* Places all cities at random locations in the world and starts the world
+     * time.
+     */
+    void create();
 };
 
 #endif // WORLD_H

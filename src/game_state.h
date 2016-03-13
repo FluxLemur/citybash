@@ -16,7 +16,6 @@
  *   - START_GAME: generates the world and commences PLAYING state
  *   - KEY: generate a new, unique player key
  *   - PLAYERS: return players who have joined
- *   - SERVER_INFO: (same as in ADMIN_WAIT)
  *
  *  PLAYING
  *   - STATS: give for each city its gold, gold/sec, level, and army size
@@ -53,7 +52,6 @@ class GameState {
     };
     PlayState state_;
     World world_;
-    void generate_world();
     std::string generate_key();
 
     /*
@@ -68,7 +66,6 @@ class GameState {
     std::string invalid_command(std::string command,
         std::vector<std::string> valid_commands);
 
-    static std::string SERVER_INFO;
     static std::string START_GAME;
     static std::string PLAYERS;
     static std::string KEY;
@@ -78,7 +75,6 @@ class GameState {
     static std::string LEADERBOARD;
     static std::string TERMINATE;
 
-    std::string admin_server_info();
     std::string admin_start_game();
     std::string admin_players();
     std::string admin_key();

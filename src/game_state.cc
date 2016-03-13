@@ -32,11 +32,6 @@ std::string GameState::invalid_command(std::string command,
   return response;
 }
 
-void GameState::generate_world() {
-  // remove any cities with -1 city_id in city_map_
-  // call world_.generate() to place cities and start game timer
-}
-
 std::string GameState::generate_key() {
   std::string key = "";
   do {
@@ -52,7 +47,6 @@ std::string GameState::generate_key() {
 /******************************************************************************/
 std::string GameState::START_GAME = "START_GAME";
 std::string GameState::PLAYERS = "PLAYERS";
-std::string GameState::SERVER_INFO = "SERVER_INFO";
 std::string GameState::KEY = "KEY";
 std::string GameState::STATS = "STATS";
 std::string GameState::MAP = "MAP";
@@ -67,13 +61,11 @@ std::string GameState::admin_request(std::string command) {
         return admin_start_game();
       } else if (command.compare(PLAYERS) == 0) {
         return admin_players();
-      } else if (command.compare(SERVER_INFO) == 0) {
-        return admin_server_info();
       } else if (command.compare(KEY) == 0) {
         return admin_key();
       } else {
         return invalid_command(command,
-            {START_GAME, PLAYERS, SERVER_INFO, KEY});
+            {START_GAME, PLAYERS, KEY});
       }
     case PLAYING:
       if (command.compare(STATS) == 0) {
@@ -98,7 +90,7 @@ std::string GameState::admin_request(std::string command) {
 
 std::string GameState::admin_start_game() {
   std::cout << "** STARTING GAME **\n";
-  generate_world();
+  world_.create();
   state_ = PlayState::PLAYING;
   return START_GAME + ": SUCCESS\n";
 }
@@ -111,10 +103,6 @@ std::string GameState::admin_players() {
     curr_players += world_.name_of(it->second) + "\n";
   }
   return curr_players;
-}
-
-std::string GameState::admin_server_info() {
-  return SERVER_INFO + ": TODO\n";
 }
 
 std::string GameState::admin_key() {
