@@ -49,6 +49,15 @@ The player controls _one_ city with assets and capabilities.
   - Training a soldier costs 10 gold and takes 30 seconds. Soldiers can be trained asynchronously.
   - Armies move 1 distance unit/sec
 
+## Game Client
+The shell script `run_client.sh` provides a simple game client that a player
+can use to connect to the game server.
+
+NOTE: the script has a dependency on
+[`rlwrap`](https://github.com/hanslub42/rlwrap), a readline wrapper for user
+input. It can easily be installed with `apt-get`. If you prefer not to use it,
+edit `run_client.sh` and remove it.
+
 ## Server Interface
 The game runs as a server. The administrator first gives each player a unique
 key which the player uses to join the game with the following command:
