@@ -82,3 +82,12 @@ void World::generate_pairwise_distances() {
     }
   }
 }
+
+std::string World::other_cities_info(city_id id) {
+  std::map<city_id, City*>::iterator it = city_map_.find(id);
+  if (it == city_map_.end() || it->second == nullptr) {
+    return "ERROR: cannot retrieve information about other cities\n";
+  } else {
+    return it->second->display_all_neighbor_info();
+  }
+}

@@ -232,8 +232,8 @@ std::string GameState::player_join(city_id id, std::string city_name) {
 }
 
 std::string GameState::player_world(city_id id) {
-  std::cout << id << " world" << std::endl;
-  return Responses::NOT_IMPLEMENTED;
+  //std::cout << id << " world" << std::endl;
+  return world_.other_cities_info(id);
 }
 
 std::string GameState::player_city(city_id id) {

@@ -41,4 +41,22 @@ void City::add_neighbor(City* neighbor, float distance) {
   neighbors_.insert(std::pair<City*, float>(neighbor, distance));
 }
 
-std::string display_neighbors();
+std::string City::display_all_neighbor_info() {
+  std::string info_str = "";
+
+  std::map<City*, float>::iterator it;
+
+  for (it = neighbors_.begin(); it != neighbors_.end(); it++) {
+    if (it->first) {
+      City& other_city = *(it->first);
+      float distance_to = it->second;
+
+      // [other name] [other level] [distance from this to other]
+      info_str += other_city.get_name() + " ";
+      info_str += std::to_string(other_city.level_) + " ";
+      info_str += std::to_string(distance_to) + "\n";
+    }
+  }
+
+  return info_str;
+}

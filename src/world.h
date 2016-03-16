@@ -49,6 +49,11 @@ class World {
      * time.
      */
     void create();
+
+    /* Returns information about other cities, relative to the City
+     * corresponding to [id].
+     */
+    std::string other_cities_info(city_id id);
 };
 
 #endif // WORLD_H

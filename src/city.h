@@ -37,7 +37,14 @@ class City {
     void set_location(Location* l);
     Location get_location();
     void add_neighbor(City* neighbor, float distance);
-    std::string display_neighbors();
+
+    /* Gives information about other cities, relative to [this].
+     * Sample output:
+     * [city1 name] [city1 level] [distance from this to city1]
+     * [city2 name] [city2 level] [distance from this to city2]
+     * ...
+     */
+    std::string display_all_neighbor_info();
 };
 
 #endif // CITY_H
