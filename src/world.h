@@ -59,6 +59,9 @@ class World {
      * [city name] [city coordinates]
      */
     std::string city_loc(city_id id);
+
+    std::string all_city_info();
+    std::string city_info(city_id id);
 };
 
 #endif // WORLD_H

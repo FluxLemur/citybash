@@ -48,7 +48,7 @@ std::string GameState::generate_key() {
 std::string GameState::START_GAME = "START_GAME";
 std::string GameState::PLAYERS = "PLAYERS";
 std::string GameState::KEY = "KEY";
-std::string GameState::STATS = "STATS";
+std::string GameState::INFO = "INFO";
 std::string GameState::MAP = "MAP";
 std::string GameState::FORCE_FINISH = "FORCE_FINISH";
 std::string GameState::LEADERBOARD = "LEADERBOARD";
@@ -68,14 +68,14 @@ std::string GameState::admin_request(std::string command) {
             {START_GAME, PLAYERS, KEY});
       }
     case PLAYING:
-      if (command.compare(STATS) == 0) {
-        return admin_stats();
+      if (command.compare(INFO) == 0) {
+        return admin_info();
       } else if (command.compare(MAP) == 0) {
         return admin_map();
       } else if (command.compare(FORCE_FINISH) == 0) {
         return admin_force_finish();
       } else {
-        return invalid_command(command, {STATS, MAP, FORCE_FINISH});
+        return invalid_command(command, {INFO, MAP, FORCE_FINISH});
       }
     case FINISHED:
       if (command.compare(LEADERBOARD) == 0) {
@@ -112,8 +112,8 @@ std::string GameState::admin_key() {
   return "NEW KEY: " + key + "\n";
 }
 
-std::string GameState::admin_stats() {
-  return STATS + ": TODO\n";
+std::string GameState::admin_info() {
+  return world_.all_city_info();
 }
 
 std::string GameState::admin_map() {
@@ -237,13 +237,11 @@ std::string GameState::player_join(city_id id, std::string city_name) {
 }
 
 std::string GameState::player_world(city_id id) {
-  //std::cout << id << " world" << std::endl;
   return world_.other_cities_info(id);
 }
 
 std::string GameState::player_city(city_id id) {
-  std::cout << id << " city" << std::endl;
-  return Responses::NOT_IMPLEMENTED;
+  return world_.city_info(id);
 }
 
 std::string GameState::player_costs(city_id id) {

@@ -18,7 +18,7 @@
  *   - PLAYERS: return players who have joined
  *
  *  PLAYING
- *   - STATS: give for each city its gold, gold/sec, level, and army size
+ *   - INFO: give for each city its gold, gold/sec, level, and army size
  *   - MAP: return a coordinate list of the cities by name
  *   - FORCE_FINISH: forces the game to stop, commencing FINISHED state
  *
@@ -69,7 +69,7 @@ class GameState {
     static std::string START_GAME;
     static std::string PLAYERS;
     static std::string KEY;
-    static std::string STATS;
+    static std::string INFO;
     static std::string MAP;
     static std::string FORCE_FINISH;
     static std::string LEADERBOARD;
@@ -78,7 +78,7 @@ class GameState {
     std::string admin_start_game();
     std::string admin_players();
     std::string admin_key();
-    std::string admin_stats();
+    std::string admin_info();
     std::string admin_map();
     std::string admin_force_finish();
     std::string admin_leaderboard();

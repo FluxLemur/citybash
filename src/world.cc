@@ -86,10 +86,10 @@ void World::generate_pairwise_distances() {
 std::string World::other_cities_info(city_id id) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
   if (it == city_by_id_.end() || it->second == nullptr) {
-    return "ERROR: cannot retrieve information about other cities\n";
-  } else {
-    return it->second->display_all_neighbor_info();
+    return "ERROR: no city with id " + std::to_string(id) + "\n";
   }
+
+  return it->second->display_all_neighbor_info();
 }
 
 std::string World::city_loc(city_id id) {
@@ -100,4 +100,23 @@ std::string World::city_loc(city_id id) {
 
   City &city = *it->second;
   return city.get_location().to_string() + "\t" + city.get_name();
+}
+
+std::string World::all_city_info() {
+  std::string info_str;
+  std::map<city_id, City*>::iterator it;
+  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+    info_str += it->second->info() + "\n";
+  }
+  return info_str;
+}
+
+std::string World::city_info(city_id id) {
+  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  if (it == city_by_id_.end() || it->second == nullptr) {
+    return "ERROR: no city with id " + std::to_string(id) + "\n";
+  }
+
+  City &city = *it->second;
+  return city.info();
 }

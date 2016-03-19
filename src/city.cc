@@ -64,3 +64,14 @@ std::string City::display_all_neighbor_info() {
 
   return info_str;
 }
+
+std::string City::info() {
+  std::string info = "";
+  info += name_ + "\n";
+  info += "  LEVEL "  + std::to_string(level_) + "\n";
+  info += "  GOLD "   + std::to_string(gold_) + "\n";
+  info += "  INCOME " + std::to_string(income_) + "\n";
+  info += "  ARMY "   + std::to_string(soldiers_) + "\n";
+
+  return info;
+}

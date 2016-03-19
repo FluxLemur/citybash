@@ -20,7 +20,7 @@ class City {
     int level_;
     int gold_;
     int income_; /* units: gold/sec */
-    int soldiers_;
+    int soldiers_; /* # currently in city */
     Location* loc_;
 
     /* Map of neighbors to their distance from this City */
@@ -38,6 +38,15 @@ class City {
     void set_location(Location* l);
     Location get_location();
     void add_neighbor(City* neighbor, float distance);
+
+    /* Returns info about the city:
+     * [city name]
+     * LEVEL [current level]
+     * GOLD [current gold]
+     * INCOME [current gold income]
+     * ARMY [current # of soldiers]
+     */
+    std::string info();
 
     /* Gives information about other cities, relative to [this].
      * Sample output:
