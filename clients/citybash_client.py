@@ -13,7 +13,7 @@ def send_command(host, port, message):
     s.connect((host, port))
 
     send(s, message)
-    print(s.recv(300))
+    print(s.recv(1000))
 
 def run(host, port):
     player_key = ''
