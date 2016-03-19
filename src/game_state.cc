@@ -126,16 +126,19 @@ std::string GameState::admin_map() {
 }
 
 std::string GameState::admin_force_finish() {
+  // TODO
   std::cout << "** ADMIN FORCE GAME FINISH **\n";
   state_ = PlayState::FINISHED;
   return FORCE_FINISH + ": SUCCESS\n";
 }
 
 std::string GameState::admin_leaderboard() {
+  // TODO
   return LEADERBOARD + ": TODO\n";
 }
 
 std::string GameState::admin_terminate() {
+  // TODO
   std::cout << "** CityBash TERMINATING... **\n";
   return TERMINATE + ": CityBash terminating...\n";
 }
@@ -245,8 +248,7 @@ std::string GameState::player_city(city_id id) {
 }
 
 std::string GameState::player_costs(city_id id) {
-  std::cout << id << " costs"<< std::endl;
-  return Responses::NOT_IMPLEMENTED;
+  return world_.city_costs(id);
 }
 
 std::string GameState::player_upgrade(city_id id) {

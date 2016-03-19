@@ -4,6 +4,11 @@
 
 city_id City::INVALID_CITY = -1;
 city_id City::current_id = -1;
+int City::incomes_[] = {1, 2, 3, 5, 7, 11, 17, 25, 38, 57};
+int City::upgrade_costs_[] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+int City::upgrade_times_[] = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
+int City::train_time_ = 5;
+int City::train_cost_ = 5;
 
 city_id City::get_next_city_id() {
   current_id++;
@@ -17,7 +22,6 @@ std::string City::city_id_string(city_id id) {
 City::City(std::string name) {
   level_ = 1;
   gold_ = 0;
-  income_ = 1;
   soldiers_ = 0;
   name_ = name;
 }
@@ -70,8 +74,18 @@ std::string City::info() {
   info += name_ + "\n";
   info += "  LEVEL "  + std::to_string(level_) + "\n";
   info += "  GOLD "   + std::to_string(gold_) + "\n";
-  info += "  INCOME " + std::to_string(income_) + "\n";
+  info += "  INCOME " + std::to_string(incomes_[level_]) + "\n";
   info += "  ARMY "   + std::to_string(soldiers_) + "\n";
 
   return info;
+}
+
+std::string City::costs() {
+  std::string costs = "";
+  costs += "UPGRADE " + std::to_string(upgrade_costs_[level_]);
+  costs += " " + std::to_string(upgrade_times_[level_]) + "\n";
+  costs += "TRAIN " + std::to_string(train_cost_);
+  costs += " " + std::to_string(train_time_) + "\n";
+
+  return costs;
 }

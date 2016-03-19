@@ -6,10 +6,10 @@ The player controls _one_ city with assets and capabilities.
 
 - Assets
   - Gold
-  - Military
+  - Army
 - Capabilities
   - Upgrade city
-  - Increase military power
+  - Increase army size
   - Attack other cities
 
 ## Gameplay
@@ -38,15 +38,14 @@ The player controls _one_ city with assets and capabilities.
   - Players are awarded points based on city level, gold, and army size, and then ranked by point-count.
 
 ## Game Mechanics
-- Cities are placed at random on square. Distance between cities can wrap araound the edges of the square (forming a torus).
-  - Side length 100 units. Mean distance between 2 cities is ~45, with a standard deviation of ~21.
+- Cities are placed at random on square.
 - For a city with Level N:
-  - Income = N gold/sec
-  - Defense multiplier = log(1 + N) (log base 2)
-  - Cost to upgrade to level N+1 city = 10 * 2^N gold, and takes 20 * N seconds
+  - Income = floor(1.5 ^ N) gold/sec
+  - Defense multiplier = log(1 + N) (base 2)
+  - Cost to upgrade to level N+1 city = 2^N gold, and takes 5 * N seconds
 - Armies
   - [Insert javascript battle simulator]
-  - Training a soldier costs 10 gold and takes 30 seconds. Soldiers can be trained asynchronously.
+  - Training a soldier costs 5 gold and takes 5 seconds. Soldiers can be trained asynchronously.
   - Armies move 1 distance unit/sec
 
 ## Game Client
@@ -78,8 +77,8 @@ The server response is given below each respective player message.
     - `INCOME [current gold income]`
     - `ARMY [# of soliders in city]`
   - `[player key] COSTS`
-    - `UPGRADE COST [gold to upgrade city]`
-    - `TRAINING COST [gold to train soldier]`
+    - `UPGRADE [gold to upgrade city] [time to upgrade city]`
+    - `TRAIN [gold to train soldier] [time to train soldier]`
   - `[player key] UPGRADE`
     - `UPGRADE SUCCESS` if current gold >= update cost
     - `UPGRADE FAILURE` otherwise

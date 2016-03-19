@@ -62,6 +62,7 @@ class World {
 
     std::string all_city_info();
     std::string city_info(city_id id);
+    std::string city_costs(city_id id);
 };
 
 #endif // WORLD_H

@@ -15,11 +15,15 @@ typedef int city_id;
 class City {
   private:
     static city_id current_id;
+    static int incomes_[];
+    static int upgrade_costs_[];
+    static int upgrade_times_[];
+    static int train_time_;
+    static int train_cost_;
 
     std::string name_;
     int level_;
     int gold_;
-    int income_; /* units: gold/sec */
     int soldiers_; /* # currently in city */
     Location* loc_;
 
@@ -55,6 +59,12 @@ class City {
      * ...
      */
     std::string display_all_neighbor_info();
+
+    /* Returns:
+     * UPGRADE [gold to upgrade city] [time to upgrade]
+     * TRAIN [gold to train soldier] [time to train]
+     */
+    std::string costs();
 };
 
 #endif // CITY_H
