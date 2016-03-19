@@ -18,7 +18,7 @@
 class World {
   private:
     int width_;
-    std::map<city_id, City*> city_map_;
+    std::map<city_id, City*> city_by_id_;
     std::set<std::string> city_names_;
     std::map<Location*, City*> city_locations_;
 
@@ -54,6 +54,11 @@ class World {
      * corresponding to [id].
      */
     std::string other_cities_info(city_id id);
+
+    /* Returns a string of a given city with its coordinate
+     * [city name] [city coordinates]
+     */
+    std::string city_loc(city_id id);
 };
 
 #endif // WORLD_H

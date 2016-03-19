@@ -29,6 +29,7 @@ class City {
   public:
     static city_id INVALID_CITY;
     static city_id get_next_city_id();
+    static std::string city_id_string(city_id id);
 
     City(std::string name);
     void collect_income();

@@ -10,6 +10,10 @@ city_id City::get_next_city_id() {
   return current_id;
 }
 
+std::string City::city_id_string(city_id id) {
+  return std::to_string(id);
+}
+
 City::City(std::string name) {
   level_ = 1;
   gold_ = 0;

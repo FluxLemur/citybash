@@ -24,3 +24,7 @@ float Location::distance_between(Location l1, Location l2) {
 std::ostream& operator<<(std::ostream &strm, const Location &l) {
   return strm << "(" << l.x_ << ", " << l.y_ << ")";
 }
+
+std::string Location::to_string() {
+  return "(" + std::to_string(x_) + ", " + std::to_string(y_) + ")";
+}

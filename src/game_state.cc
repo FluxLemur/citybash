@@ -117,7 +117,12 @@ std::string GameState::admin_stats() {
 }
 
 std::string GameState::admin_map() {
-  return MAP + ": TODO\n";
+  std::map<std::string, city_id>::iterator it;
+  std::string map_str = "";
+  for (it = city_map_.begin(); it != city_map_.end(); it++) {
+    map_str += it->first + " " + world_.city_loc(it->second) + "\n";
+  }
+  return map_str;
 }
 
 std::string GameState::admin_force_finish() {
