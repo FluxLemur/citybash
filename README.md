@@ -75,6 +75,7 @@ The server response is given below each respective player message.
   - `[player key] CITY`
     - `LEVEL [current city level]`
     - `GOLD [current gold amount]`
+    - `INCOME [current gold income]`
     - `ARMY [# of soliders in city]`
   - `[player key] COSTS`
     - `UPGRADE COST [gold to upgrade city]`
