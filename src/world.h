@@ -7,6 +7,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <chrono>
 #include <map>
 #include <set>
 #include <string>
@@ -24,6 +25,7 @@ class World {
 
     void randomly_place_cities();
     void generate_pairwise_distances();
+    std::chrono::steady_clock::time_point start_time_;
 
   public:
     World(int width=100);

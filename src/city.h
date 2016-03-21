@@ -5,6 +5,7 @@
 #ifndef CITY_H
 #define CITY_H
 
+#include <chrono>
 #include <map>
 #include <string>
 
@@ -23,9 +24,17 @@ class City {
 
     std::string name_;
     int level_;
-    int gold_;
+    double gold_;
     int soldiers_; /* # currently in city */
     Location* loc_;
+
+    int get_gold();
+
+    /* updates the amount of gold the city has, depending on what the current
+     * income is, the time since last call to update_gold()
+     */
+    void update_gold();
+    std::chrono::steady_clock::time_point last_income_;
 
     /* Map of neighbors to their distance from this City */
     std::map<City*, float> neighbors_;
@@ -36,12 +45,12 @@ class City {
     static std::string city_id_string(city_id id);
 
     City(std::string name);
-    void collect_income();
     bool upgrade();
     std::string get_name();
     void set_location(Location* l);
     Location get_location();
     void add_neighbor(City* neighbor, float distance);
+    void set_start_time(std::chrono::steady_clock::time_point time);
 
     /* Returns info about the city:
      * [city name]

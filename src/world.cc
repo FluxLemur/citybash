@@ -37,7 +37,7 @@ std::string World::name_of(city_id id) {
   std::map<city_id, City*>::iterator it;
   it = city_by_id_.find(id);
   if (it == city_by_id_.end()) {
-    return "Error: city not yet created\n";
+    return "Error: city not yet created";
   } else {
     return it->second->get_name();
   }
@@ -46,6 +46,12 @@ std::string World::name_of(city_id id) {
 void World::create() {
   randomly_place_cities();
   generate_pairwise_distances();
+  start_time_ = std::chrono::steady_clock::now();
+
+  std::map<city_id, City*>::iterator it;
+  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+    it->second->set_start_time(start_time_);
+  }
 }
 
 void World::randomly_place_cities() {

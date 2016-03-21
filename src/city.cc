@@ -21,12 +21,28 @@ std::string City::city_id_string(city_id id) {
 
 City::City(std::string name) {
   level_ = 1;
-  gold_ = 0;
+  gold_ = 0.0;
   soldiers_ = 0;
   name_ = name;
 }
 
-void City::collect_income() {
+void City::set_start_time(std::chrono::steady_clock::time_point time) {
+  last_income_ = time;
+}
+
+void City::update_gold() {
+  std::chrono::duration<double> diff = std::chrono::steady_clock::now() - last_income_;
+  double delta_sec = diff.count();
+  double delta_gold = delta_sec * incomes_[level_];
+  if (delta_gold >= 1) {
+    gold_ += delta_gold;
+    last_income_ = std::chrono::steady_clock::now();
+  }
+}
+
+int City::get_gold() {
+  update_gold();
+  return int(gold_);
 }
 
 bool City::upgrade() {
@@ -72,10 +88,10 @@ std::string City::display_all_neighbor_info() {
 std::string City::info() {
   std::string info = "";
   info += name_ + "\n";
-  info += "  LEVEL "  + std::to_string(level_) + "\n";
-  info += "  GOLD "   + std::to_string(gold_) + "\n";
+  info += "  LEVEL  " + std::to_string(level_) + "\n";
+  info += "  GOLD   " + std::to_string(get_gold()) + "\n";
   info += "  INCOME " + std::to_string(incomes_[level_]) + "\n";
-  info += "  ARMY "   + std::to_string(soldiers_) + "\n";
+  info += "  ARMY   " + std::to_string(soldiers_) + "\n";
 
   return info;
 }
