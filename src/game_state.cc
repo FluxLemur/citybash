@@ -179,7 +179,11 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
   switch (state_) {
     case PLAYER_JOIN:
       if (split_req.size() != 3 || command.compare(Requests::JOIN) != 0) {
-        return "INVALID SYNTAX\nVALID: [player key] JOIN [city_name_no_spaces]\n";
+        if (id != City::INVALID_CITY) {
+          return "Please wait for the game to start.\n";
+        } else {
+          return "INVALID SYNTAX\nVALID: [player key] JOIN [city_name_no_spaces]\n";
+        }
       } else {
         if (id == City::INVALID_CITY) {
           return "INVALID PLAYER KEY: [" + player_key + "]\n";
@@ -208,7 +212,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         if (split_req.size() < 3 || !Utils::is_number(split_req[2])) {
           return Responses::INVALID_TRAIN;
         } else {
-          int num_soldiers = std::stoi(split_req[2], nullptr, 10);
+          int num_soldiers = std::stoi(split_req[2]);
           return player_train(id, num_soldiers);
         }
 
@@ -216,7 +220,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         if (split_req.size() < 4 || !Utils::is_number(split_req[3])) {
           return Responses::INVALID_ATTACK;
         } else {
-          int num_soldiers = std::stoi(split_req[3], nullptr, 10);
+          int num_soldiers = std::stoi(split_req[3]);
           return player_attack(id, split_req[2], num_soldiers);
         }
       } else {

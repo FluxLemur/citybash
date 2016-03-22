@@ -100,7 +100,7 @@ std::string City::costs() {
   std::string costs = "";
   costs += "UPGRADE " + std::to_string(upgrade_costs_[level_]);
   costs += " " + std::to_string(upgrade_times_[level_]) + "\n";
-  costs += "TRAIN " + std::to_string(train_cost_);
+  costs += "TRAIN   " + std::to_string(train_cost_);
   costs += " " + std::to_string(train_time_) + "\n";
 
   return costs;
