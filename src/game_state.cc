@@ -256,8 +256,7 @@ std::string GameState::player_costs(city_id id) {
 }
 
 std::string GameState::player_upgrade(city_id id) {
-  std::cout << id << " upgrade" << std::endl;
-  return Responses::NOT_IMPLEMENTED;
+  return world_.city_upgrade(id);
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {

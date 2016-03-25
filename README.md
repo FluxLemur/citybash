@@ -1,5 +1,7 @@
 # CityBash
-CityBash is simeple [real time strategy game](https://en.wikipedia.org/wiki/Real-time_strategy) written as a server to facillitate the implementation and integration of AI players.
+CityBash is simple [real time strategy
+game](https://en.wikipedia.org/wiki/Real-time_strategy) written as a server to
+facilitate the implementation and integration of AI players.
 
 ## Overview
 The player controls _one_ city with assets and capabilities.
@@ -25,9 +27,9 @@ The player controls _one_ city with assets and capabilities.
   - The player's city starts at level 1.
   - Higher level cities yield higher gold income, and have a larger defense multiplier.
   - Level 10 is the highest.
-- Miltary
+- Military
   - The city houses a player's army. Take city A that has 20 soldiers.
-  - An attack happens in 3 steps. Let’s say city A orders 10 soliders to attack on city B (the other 10 will remain defending the city).
+  - An attack happens in 3 steps. Let’s say city A orders 10 soldiers to attack on city B (the other 10 will remain defending the city).
     1. Nothing happens for some time _T_ab_, proportional to the distance between cities A and B. The army is moving.
     2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them.
     3. After _T_ab_ more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
@@ -38,11 +40,11 @@ The player controls _one_ city with assets and capabilities.
   - Players are awarded points based on city level, gold, and army size, and then ranked by point-count.
 
 ## Game Mechanics
-- Cities are placed at random on square.
+- Cities are placed at random on a 50x50 square world.
 - For a city with Level N:
-  - Income = floor(1.5 ^ N) gold/sec
-  - Defense multiplier = log(1 + N) (base 2)
-  - Cost to upgrade to level N+1 city = 2^N gold, and takes 5 * N seconds
+  - Income = [in development]
+  - Defense multiplier = [in development]
+  - Cost to upgrade to level N+1 city = [in development]
 - Armies
   - [Insert javascript battle simulator]
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers can be trained asynchronously.
@@ -75,13 +77,13 @@ The server response is given below each respective player message.
     - `LEVEL [current city level]`
     - `GOLD [current gold amount]`
     - `INCOME [current gold income]`
-    - `ARMY [# of soliders in city]`
+    - `ARMY [# of soldiers in city]`
   - `[player key] COSTS`
     - `UPGRADE [gold to upgrade city] [time to upgrade city]`
     - `TRAIN [gold to train soldier] [time to train soldier]`
   - `[player key] UPGRADE`
-    - `UPGRADE SUCCESS` if current gold >= update cost
-    - `UPGRADE FAILURE` otherwise
+    - `UPGRADE SUCCESS` if current gold >= upgrade cost
+    - `UPGRADE FAILURE [# current gold] < [gold needed]` otherwise
   - `[player key] TRAIN [# soldiers]`
     - `TRAIN [# soldiers] SUCCESS` if current gold >= cost of soldiers
     - `INVALID TRAIN. USAGE: [player key] TRAIN [# soldiers]` otherwise

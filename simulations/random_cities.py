@@ -16,8 +16,9 @@ def city_distance_stats():
     distance_stats(elementwise_dists(np.random.randn(10000, 2), np.random.randn(10000, 2)),
                    'normal distrib. with mean 0, variance 1')
 
-    distance_stats(elementwise_dists(np.random.rand(10000, 2)*3.5, np.random.rand(10000, 2)*3.5),
-                   'uniform distribution [0,3.5]')
+    D = 50
+    distance_stats(elementwise_dists(np.random.rand(10000, 2)*D, np.random.rand(10000, 2)*D),
+                   'uniform distribution [0,%d]' % D)
 
     def pairwise_wrapping_distances(points, L):
         N = len(points)

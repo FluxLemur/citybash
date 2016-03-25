@@ -43,9 +43,9 @@ class City {
     static city_id INVALID_CITY;
     static city_id get_next_city_id();
     static std::string city_id_string(city_id id);
+    static int MAX_LEVEL;
 
     City(std::string name);
-    bool upgrade();
     std::string get_name();
     void set_location(Location* l);
     Location get_location();
@@ -74,6 +74,14 @@ class City {
      * TRAIN [gold to train soldier] [time to train]
      */
     std::string costs();
+
+    /* Returns:
+     * if [current gold] >= [upgrade gold] returns:
+     *   UPGRADE SUCCES
+     * else returns:
+     *   UPGRADE FAILURE [# current gold] < [gold needed]
+     */
+    std::string upgrade();
 };
 
 #endif // CITY_H

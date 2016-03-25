@@ -28,7 +28,7 @@ class World {
     std::chrono::steady_clock::time_point start_time_;
 
   public:
-    World(int width=100);
+    World(int width=50);
     ~World();
     enum AddCityResponse {
       NAME_EXISTS,
@@ -63,8 +63,13 @@ class World {
     std::string city_loc(city_id id);
 
     std::string all_city_info();
+
+    /* the city_* functions have a precondition that [id] is contained in
+     * city_by_id_ and the corresponding city is initialized
+     */
     std::string city_info(city_id id);
     std::string city_costs(city_id id);
+    std::string city_upgrade(city_id id);
 };
 
 #endif // WORLD_H

@@ -119,20 +119,18 @@ std::string World::all_city_info() {
 
 std::string World::city_info(city_id id) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
-  if (it == city_by_id_.end() || it->second == nullptr) {
-    return "ERROR: no city with id " + std::to_string(id) + "\n";
-  }
-
   City &city = *it->second;
   return city.info();
 }
 
 std::string World::city_costs(city_id id) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
-  if (it == city_by_id_.end() || it->second == nullptr) {
-    return "ERROR: no city with id " + std::to_string(id) + "\n";
-  }
-
   City &city = *it->second;
   return city.costs();
+}
+
+std::string World::city_upgrade(city_id id) {
+  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  City &city = *it->second;
+  return city.upgrade();
 }

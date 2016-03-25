@@ -4,11 +4,13 @@
 
 city_id City::INVALID_CITY = -1;
 city_id City::current_id = -1;
-int City::incomes_[] = {1, 2, 3, 5, 7, 11, 17, 25, 38, 57};
-int City::upgrade_costs_[] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
-int City::upgrade_times_[] = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
+int City::incomes_[] = {1, 2, 3, 5, 8};
+int City::upgrade_costs_[] = {30, 90, 270, 810, 2430};
+int City::upgrade_times_[] = {5, 10, 15, 20, 25};
 int City::train_time_ = 5;
 int City::train_cost_ = 5;
+
+int City::MAX_LEVEL = 5;
 
 city_id City::get_next_city_id() {
   current_id++;
@@ -43,10 +45,6 @@ void City::update_gold() {
 int City::get_gold() {
   update_gold();
   return int(gold_);
-}
-
-bool City::upgrade() {
-  return true;
 }
 
 std::string City::get_name() {
@@ -104,4 +102,24 @@ std::string City::costs() {
   costs += " " + std::to_string(train_time_) + "\n";
 
   return costs;
+}
+
+std::string City::upgrade() {
+  int gold = get_gold();
+  int upgrade_cost = upgrade_costs_[level_];
+
+  if (level_ == City::MAX_LEVEL) {
+    return "UPGRADE FAILURE MAX LEVEL\n";
+  }
+
+  if (gold > upgrade_cost) {
+    gold_ -= upgrade_cost;
+    level_++;
+    return "UPGRADE SUCCESS\n";
+  }
+
+  std::string response = "UPGRADE FAILURE ";
+  response += std::to_string(gold) + " < " + std::to_string(upgrade_cost);
+  response += "\n";
+  return response;
 }
