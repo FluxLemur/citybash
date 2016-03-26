@@ -83,13 +83,16 @@ The server response is given below each respective player message.
     - `TRAIN [gold to train soldier] [time to train soldier]`
   - `[player key] UPGRADE`
     - `UPGRADE SUCCESS` if current gold >= upgrade cost
-    - `UPGRADE FAILURE [# current gold] < [gold needed]` otherwise
+    - `UPGRADE FAILURE [gold needed] > [current gold]` otherwise
   - `[player key] TRAIN [# soldiers]`
     - `TRAIN [# soldiers] SUCCESS` if current gold >= cost of soldiers
-    - `INVALID TRAIN. USAGE: [player key] TRAIN [# soldiers]` otherwise
+    - `INVALID TRAIN. VALID: [player key] TRAIN [# soldiers]` if wrong format or # soldiers is not a positive integer
+` if # soldiers is not a positive integer
+    - `TRAIN FAILURE Cannot train 0 soldiers` corner case
+    - `TRAIN FAILURE [# soldiers] COSTS [gold needed] > [current gold]` otherwise
   - `[player key] ATTACK [city-name] [# soldiers]`
     - `ATTACK [city-name] [# soldiers] SUCCESS` if city name valid and soldiers in [1, # soldiers in city]
-    - `INVALID ATTACK. USAGE: [player key] ATTACK [other city name] [# soldiers]\n`
+    - `INVALID ATTACK. VALID: [player key] ATTACK [other city name] [# soldiers]\n`
 
 When the game is over, the server rejects player commands, and the
 administrator can announce the results.

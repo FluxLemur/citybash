@@ -134,3 +134,9 @@ std::string World::city_upgrade(city_id id) {
   City &city = *it->second;
   return city.upgrade();
 }
+
+std::string World::city_train(city_id id, int soldiers) {
+  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  City &city = *it->second;
+  return city.train(soldiers);
+}

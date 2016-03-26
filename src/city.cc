@@ -35,7 +35,7 @@ void City::set_start_time(std::chrono::steady_clock::time_point time) {
 void City::update_gold() {
   std::chrono::duration<double> diff = std::chrono::steady_clock::now() - last_income_;
   double delta_sec = diff.count();
-  double delta_gold = delta_sec * incomes_[level_];
+  double delta_gold = delta_sec * incomes_[level_ - 1];
   if (delta_gold >= 1) {
     gold_ += delta_gold;
     last_income_ = std::chrono::steady_clock::now();
@@ -88,7 +88,7 @@ std::string City::info() {
   info += name_ + "\n";
   info += "  LEVEL  " + std::to_string(level_) + "\n";
   info += "  GOLD   " + std::to_string(get_gold()) + "\n";
-  info += "  INCOME " + std::to_string(incomes_[level_]) + "\n";
+  info += "  INCOME " + std::to_string(incomes_[level_ - 1]) + "\n";
   info += "  ARMY   " + std::to_string(soldiers_) + "\n";
 
   return info;
@@ -96,8 +96,8 @@ std::string City::info() {
 
 std::string City::costs() {
   std::string costs = "";
-  costs += "UPGRADE " + std::to_string(upgrade_costs_[level_]);
-  costs += " " + std::to_string(upgrade_times_[level_]) + "\n";
+  costs += "UPGRADE " + std::to_string(upgrade_costs_[level_ - 1]);
+  costs += " " + std::to_string(upgrade_times_[level_ - 1]) + "\n";
   costs += "TRAIN   " + std::to_string(train_cost_);
   costs += " " + std::to_string(train_time_) + "\n";
 
@@ -106,7 +106,7 @@ std::string City::costs() {
 
 std::string City::upgrade() {
   int gold = get_gold();
-  int upgrade_cost = upgrade_costs_[level_];
+  int upgrade_cost = upgrade_costs_[level_ - 1];
 
   if (level_ == City::MAX_LEVEL) {
     return "UPGRADE FAILURE MAX LEVEL\n";
@@ -119,7 +119,24 @@ std::string City::upgrade() {
   }
 
   std::string response = "UPGRADE FAILURE ";
-  response += std::to_string(gold) + " < " + std::to_string(upgrade_cost);
+  response += std::to_string(upgrade_cost) + " > " + std::to_string(gold);
+  response += "\n";
+  return response;
+}
+
+std::string City::train(int num_soldiers) {
+  int gold = get_gold();
+  int train_cost = num_soldiers * train_cost_;
+
+  if (gold >= train_cost) {
+    gold_ -= train_cost;
+    soldiers_ += num_soldiers;
+    return "TRAIN " + std::to_string(num_soldiers) + " SUCCESS\n";
+  }
+
+  std::string response = "TRAIN FAILURE ";
+  response += std::to_string(num_soldiers) + " COSTS ";
+  response += std::to_string(train_cost) + " > " + std::to_string(gold);
   response += "\n";
   return response;
 }

@@ -77,11 +77,20 @@ class City {
 
     /* Returns:
      * if [current gold] >= [upgrade gold] returns:
-     *   UPGRADE SUCCES
+     *   UPGRADE SUCCESS
      * else returns:
-     *   UPGRADE FAILURE [# current gold] < [gold needed]
+     *   UPGRADE FAILURE [gold needed] > [current gold]
      */
     std::string upgrade();
+
+    /* Precondition: num_soldiers > 0
+     * Returns:
+     * if [current gold] >= [train_cost_ * num_soldiers] returns:
+     *   TRAIN [num_soldiers] SUCCESS
+     * else returns:
+     *   TRAIN FAILURE [# soldiers] COSTS [gold needed] > [current gold]
+     */
+    std::string train(int num_soldiers);
 };
 
 #endif // CITY_H

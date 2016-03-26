@@ -70,6 +70,7 @@ class World {
     std::string city_info(city_id id);
     std::string city_costs(city_id id);
     std::string city_upgrade(city_id id);
+    std::string city_train(city_id id, int soldiers);
 };
 
 #endif // WORLD_H

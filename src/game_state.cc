@@ -260,8 +260,10 @@ std::string GameState::player_upgrade(city_id id) {
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {
-  std::cout << id << " train "<< soldiers << std::endl;
-  return Responses::NOT_IMPLEMENTED;
+  if (soldiers == 0) {
+    return "TRAIN FAILURE. Cannot train 0 soldiers\n";
+  }
+  return world_.city_train(id, soldiers);
 }
 
 std::string GameState::player_attack(city_id from_city, std::string to_city, int soldiers) {

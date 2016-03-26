@@ -11,9 +11,9 @@ const std::string Requests::TRAIN = "TRAIN";
 const std::string Responses::INVALID = "INVALID REQUEST\n";
 const std::string Responses::INVALID_PLAYER_KEY = "INVALID PLAYER KEY\n";
 const std::string Responses::INVALID_TRAIN =
-                  "INVALID TRAIN\n"
-                  "VALID: [city hash] TRAIN [# soldiers]\n";
+                  "INVALID TRAIN. "
+                  "VALID: [player key] TRAIN [# soldiers]\n";
 const std::string Responses::INVALID_ATTACK =
-                  "INVALID ATTACK\n"
-                  "VALID: [city hash] ATTACK [other city name] [# soldiers]\n";
+                  "INVALID ATTACK. "
+                  "VALID: [player key] ATTACK [other city name] [# soldiers]\n";
 const std::string Responses::NOT_IMPLEMENTED = "NOT IMPLEMENTED\n";
