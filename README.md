@@ -91,8 +91,15 @@ The server response is given below each respective player message.
     - `TRAIN FAILURE Cannot train 0 soldiers` corner case
     - `TRAIN FAILURE [# soldiers] COSTS [gold needed] > [current gold]` otherwise
   - `[player key] ATTACK [city-name] [# soldiers]`
-    - `ATTACK [city-name] [# soldiers] SUCCESS` if city name valid and soldiers in [1, # soldiers in city]
     - `INVALID ATTACK. VALID: [player key] ATTACK [other city name] [# soldiers]\n`
+       if syntax is invalid (not 4 tokens or # soldiers is not a positive integer)
+    - `ATTACK FAILURE Cannot attack with 0 soldiers`, or
+    - `ATTACK FAILURE Cannot attack your own city`, or
+    - `ATTACK FAILURE No city [city-name]`, or
+    - `ATTACK FAILURE [# soldiers] > [# soldiers in city]`, or
+    - `ATTACK {WIN, LOSE} [#] of [#] return with [#] gold, [city-name] losses: [#] left from [#]`
+       if none of the previous cases apply. If 0 soldiers return, the part of
+       the message including and after the `,` is ommitted.
 
 When the game is over, the server rejects player commands, and the
 administrator can announce the results.

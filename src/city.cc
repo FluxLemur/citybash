@@ -47,6 +47,23 @@ int City::get_gold() {
   return int(gold_);
 }
 
+int City::change_gold(int delta) {
+  int gold = get_gold();
+  if (delta > 0) {
+    gold_ += delta;
+    return -delta;
+  }
+
+  int new_gold = gold + delta;
+  if (new_gold < 0) {
+    gold_ = gold_ - gold;
+    return gold;
+  } else {
+    gold_ += delta;
+    return -delta;
+  }
+}
+
 std::string City::get_name() {
   return name_;
 }
@@ -139,4 +156,14 @@ std::string City::train(int num_soldiers) {
   response += std::to_string(train_cost) + " > " + std::to_string(gold);
   response += "\n";
   return response;
+}
+
+int City::get_soldiers() {
+  return soldiers_;
+}
+
+void City::set_soldiers(int n) {
+  if (n >= 0) {
+    soldiers_ = n;
+  }
 }

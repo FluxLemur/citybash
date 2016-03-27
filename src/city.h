@@ -28,7 +28,6 @@ class City {
     int soldiers_; /* # currently in city */
     Location* loc_;
 
-    int get_gold();
 
     /* updates the amount of gold the city has, depending on what the current
      * income is, the time since last call to update_gold()
@@ -51,6 +50,13 @@ class City {
     Location get_location();
     void add_neighbor(City* neighbor, float distance);
     void set_start_time(std::chrono::steady_clock::time_point time);
+    int get_gold();
+
+    /* Changes the gold in this city by [delta], such that [gold_] is not
+     * less than 0.
+     * Returns the difference between [gold_] before and after
+     */
+    int change_gold(int delta);
 
     /* Returns info about the city:
      * [city name]
@@ -91,6 +97,9 @@ class City {
      *   TRAIN FAILURE [# soldiers] COSTS [gold needed] > [current gold]
      */
     std::string train(int num_soldiers);
+
+    int get_soldiers();
+    void set_soldiers(int n);
 };
 
 #endif // CITY_H

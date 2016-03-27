@@ -20,7 +20,7 @@ class World {
   private:
     int width_;
     std::map<city_id, City*> city_by_id_;
-    std::set<std::string> city_names_;
+    std::map<std::string, City*> city_names_;
     std::map<Location*, City*> city_locations_;
 
     void randomly_place_cities();
@@ -64,13 +64,17 @@ class World {
 
     std::string all_city_info();
 
-    /* the city_* functions have a precondition that [id] is contained in
+    /* the below city_* functions have a precondition that [id] is contained in
      * city_by_id_ and the corresponding city is initialized
      */
     std::string city_info(city_id id);
     std::string city_costs(city_id id);
     std::string city_upgrade(city_id id);
+
+    /* train and attack have preconditions that soldiers is > 0
+     */
     std::string city_train(city_id id, int soldiers);
+    std::string city_attack(city_id from_city, std::string to_city_name, int soldiers);
 };
 
 #endif // WORLD_H

@@ -266,8 +266,10 @@ std::string GameState::player_train(city_id id, int soldiers) {
   return world_.city_train(id, soldiers);
 }
 
-std::string GameState::player_attack(city_id from_city, std::string to_city, int soldiers) {
-  std::cout << from_city << " attack " << to_city;
-  std::cout << " with " << soldiers << " soldiers" << std::endl;
-  return Responses::NOT_IMPLEMENTED;
+std::string GameState::player_attack(city_id from_city,
+    std::string to_city_name, int soldiers) {
+  if (soldiers == 0) {
+    return "ATTACK FAILURE Cannot attack with 0 soldiers\n";
+  }
+  return world_.city_attack(from_city, to_city_name, soldiers);
 }

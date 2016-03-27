@@ -16,7 +16,7 @@ World::~World() {
 }
 
 World::AddCityResponse World::add_city(city_id id, std::string name) {
-  std::set<std::string>::iterator names_it;
+  std::map<std::string, City*>::iterator names_it;
   names_it = city_names_.find(name);
   if (names_it != city_names_.end()) { // name already exists
     return AddCityResponse::NAME_EXISTS;
@@ -28,8 +28,9 @@ World::AddCityResponse World::add_city(city_id id, std::string name) {
     return AddCityResponse::CITY_EXISTS;
   }
 
-  city_names_.insert(name);
-  city_by_id_.insert(std::pair<city_id, City*>(id, new City(name)));
+  City *new_city = new City(name);
+  city_names_.insert(std::pair<std::string, City*>(name, new_city));
+  city_by_id_.insert(std::pair<city_id, City*>(id, new_city));
   return AddCityResponse::SUCCESS;
 }
 
@@ -139,4 +140,67 @@ std::string World::city_train(city_id id, int soldiers) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
   City &city = *it->second;
   return city.train(soldiers);
+}
+
+std::string World::city_attack(city_id from_city, std::string to_city_name,
+    int num_attacking) {
+
+  std::map<city_id, City*>::iterator id_it = city_by_id_.find(from_city);
+  City &attack_city = *id_it->second;
+  int all_from_soldiers = attack_city.get_soldiers();
+  if (num_attacking > all_from_soldiers) {
+    return "ATTACK FAILURE " + std::to_string(num_attacking) + " > " +
+      std::to_string(all_from_soldiers);
+  }
+
+  std::map<std::string, City*>::iterator name_it = city_names_.find(to_city_name);
+  if (name_it == city_names_.end()) {
+    return "ATTACK INVALID No city " + to_city_name + "\n";
+  }
+  City &to_city = *name_it->second;
+  int num_defending = to_city.get_soldiers();
+  if (to_city.get_name().compare(attack_city.get_name()) == 0) {
+    return "ATTACK FAILURE Cannto attack your own city\n";
+  }
+
+  bool attackers_win;
+  int attackers_remaining;
+  int defenders_remaining;
+
+  if (num_attacking > num_defending) {
+    attackers_win = true;
+    attackers_remaining = num_attacking - num_defending;
+    defenders_remaining = 0;
+  } else {
+    attackers_win = false;
+    attackers_remaining = 0;
+    defenders_remaining = num_defending - num_attacking;
+  }
+
+  attack_city.set_soldiers(all_from_soldiers - num_attacking + attackers_remaining);
+  to_city.set_soldiers(defenders_remaining);
+
+  int attacker_capacity = attackers_remaining * 2;
+  int gold_taken = to_city.change_gold(-attacker_capacity);
+
+  attack_city.change_gold(gold_taken);
+
+  std::string result = "ATTACK ";
+  if (attackers_win) {
+    result += " WIN ";
+  } else {
+    result += " LOSE ";
+  }
+
+  result += std::to_string(attackers_remaining) + " of ";
+  result += std::to_string(num_attacking) + " return with ";
+  result += std::to_string(gold_taken) + " gold";
+  if (attackers_win) {
+    result += ", " + to_city.get_name() + " losses: ";
+    result += std::to_string(defenders_remaining) + " left from ";
+    result += std::to_string(num_defending);
+  }
+
+  result += "\n";
+  return result;
 }
