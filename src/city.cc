@@ -2,11 +2,13 @@
 
 #include "city.h"
 
+double City::defense_multiplier[] = {1.2, 1.3, 1.4, 1.5};
 city_id City::INVALID_CITY = -1;
 city_id City::current_id = -1;
-int City::incomes_[] = {1, 2, 3, 5, 8};
-int City::upgrade_costs_[] = {30, 90, 270, 810, 2430};
-int City::upgrade_times_[] = {5, 10, 15, 20, 25};
+
+int City::incomes_[] = {1, 2, 3, 5};
+int City::upgrade_costs_[] = {30, 90, 270, 810};
+int City::upgrade_times_[] = {5, 10, 15, 20};
 int City::train_time_ = 5;
 int City::train_cost_ = 5;
 
@@ -108,7 +110,21 @@ std::string City::info() {
   info += "  INCOME " + std::to_string(incomes_[level_ - 1]) + "\n";
   info += "  ARMY   " + std::to_string(soldiers_) + "\n";
 
+  std::vector<std::string>::iterator it;
+  for (it = notifications_.begin(); it != notifications_.end(); it++) {
+    info += "  * ";
+    info += *it;
+    info += "\n";
+  }
+
   return info;
+}
+
+void City::clear_notifications() {
+}
+
+int City::get_level() {
+  return level_;
 }
 
 std::string City::costs() {

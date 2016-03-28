@@ -78,6 +78,8 @@ The server response is given below each respective player message.
     - `GOLD [current gold amount]`
     - `INCOME [current gold income]`
     - `ARMY [# of soldiers in city]`
+    - `[list of notifcations]` of the form `\* [#] sec ago: [contents]`, where `[contents]` can be any of...
+      - `Attacked by [city name] with [#] ([#] left with [#] gold), [#] of your [#] soldiers remained`
   - `[player key] COSTS`
     - `UPGRADE [gold to upgrade city] [time to upgrade city]`
     - `TRAIN [gold to train soldier] [time to train soldier]`

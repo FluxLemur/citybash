@@ -1,6 +1,7 @@
 #include <iostream>
 #include <set>
 
+#include "battle.h"
 #include "location.h"
 #include "world.h"
 
@@ -121,7 +122,10 @@ std::string World::all_city_info() {
 std::string World::city_info(city_id id) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
   City &city = *it->second;
-  return city.info();
+
+  std::string info = city.info();
+  city.clear_notifications();
+  return info;
 }
 
 std::string World::city_costs(city_id id) {
@@ -163,41 +167,28 @@ std::string World::city_attack(city_id from_city, std::string to_city_name,
     return "ATTACK FAILURE Cannto attack your own city\n";
   }
 
-  bool attackers_win;
-  int attackers_remaining;
-  int defenders_remaining;
+  Battle b(num_attacking, num_defending, to_city.get_level());
 
-  if (num_attacking > num_defending) {
-    attackers_win = true;
-    attackers_remaining = num_attacking - num_defending;
-    defenders_remaining = 0;
-  } else {
-    attackers_win = false;
-    attackers_remaining = 0;
-    defenders_remaining = num_defending - num_attacking;
-  }
-
-  attack_city.set_soldiers(all_from_soldiers - num_attacking + attackers_remaining);
-  to_city.set_soldiers(defenders_remaining);
-
-  int attacker_capacity = attackers_remaining * 2;
+  int attacker_capacity = b.attackers_remaining() * 2;
   int gold_taken = to_city.change_gold(-attacker_capacity);
 
+  attack_city.set_soldiers(all_from_soldiers - num_attacking + b.attackers_remaining());
   attack_city.change_gold(gold_taken);
+  to_city.set_soldiers(b.defenders_remaining());
 
   std::string result = "ATTACK ";
-  if (attackers_win) {
-    result += " WIN ";
+  if (b.attackers_win()) {
+    result += "WIN ";
   } else {
-    result += " LOSE ";
+    result += "LOSE ";
   }
 
-  result += std::to_string(attackers_remaining) + " of ";
+  result += std::to_string(b.attackers_remaining()) + "/";
   result += std::to_string(num_attacking) + " return with ";
   result += std::to_string(gold_taken) + " gold";
-  if (attackers_win) {
-    result += ", " + to_city.get_name() + " losses: ";
-    result += std::to_string(defenders_remaining) + " left from ";
+  if (b.attackers_win()) {
+    result += ", " + to_city.get_name() + " remaining: ";
+    result += std::to_string(b.defenders_remaining()) + "/";
     result += std::to_string(num_defending);
   }
 

@@ -8,6 +8,7 @@
 #include <chrono>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "location.h"
 
@@ -28,6 +29,7 @@ class City {
     int soldiers_; /* # currently in city */
     Location* loc_;
 
+    std::vector<std::string> notifications_;
 
     /* updates the amount of gold the city has, depending on what the current
      * income is, the time since last call to update_gold()
@@ -39,6 +41,7 @@ class City {
     std::map<City*, float> neighbors_;
 
   public:
+    static double defense_multiplier[];
     static city_id INVALID_CITY;
     static city_id get_next_city_id();
     static std::string city_id_string(city_id id);
@@ -51,6 +54,8 @@ class City {
     void add_neighbor(City* neighbor, float distance);
     void set_start_time(std::chrono::steady_clock::time_point time);
     int get_gold();
+    void clear_notifications();
+    int get_level();
 
     /* Changes the gold in this city by [delta], such that [gold_] is not
      * less than 0.

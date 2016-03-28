@@ -6,9 +6,11 @@
 
 #include "location.h"
 #include "utils.h"
+#include "battle.h"
 
 void test_string_processing();
 void test_locations();
+void test_battles();
 void distance_approx(Location l1, Location l2, float target);
 
 void test_string_processing() {
@@ -59,9 +61,23 @@ void test_locations() {
   distance_approx(l1, l2, 5.0);
 }
 
+void test_battles() {
+  Battle* b = new Battle(1, 1, 1);
+  assert(!b->attackers_win());
+  assert(b->attackers_remaining() == 0);
+  assert(b->defenders_remaining() == 0);
+  delete b;
+
+  b = new Battle(12, 10, 1);
+  assert(!b->attackers_win());
+  assert(b->attackers_remaining() == 0);
+  assert(b->defenders_remaining() == 0);
+}
+
 int main() {
   test_string_processing();
   test_locations();
+  test_battles();
 
   std::cout << "All tests pass!\n";
   return 0;
