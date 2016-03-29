@@ -30,9 +30,9 @@ The player controls _one_ city with assets and capabilities.
 - Military
   - The city houses a player's army. Take city A that has 20 soldiers.
   - An attack happens in 3 steps. Let’s say city A orders 10 soldiers to attack on city B (the other 10 will remain defending the city).
-    1. Nothing happens for some time _T_ab_, proportional to the distance between cities A and B. The army is moving.
-    2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them.
-    3. After _T_ab_ more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
+    1. Nothing happens for some time `T_ab`, proportional to the distance between cities A and B. The army is moving.
+    2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them. Some of B's gold is safely hidden in it's _cache_.
+    3. After `T_ab` more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
 - Ending Conditions
   - The game stops when either:
     1. A player upgrades to a level 10 city
@@ -41,14 +41,17 @@ The player controls _one_ city with assets and capabilities.
 
 ## Game Mechanics
 - Cities are placed at random on a 50x50 square world.
-- For a city with Level N:
-  - Income = [in development]
-  - Defense multiplier = [in development]
-  - Cost to upgrade to level N+1 city = [in development]
 - Armies
-  - [Insert javascript battle simulator]
+  - See `simulations/battle_sim.py`
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers can be trained asynchronously.
   - Armies move 1 distance unit/sec
+
+City Level | Income | Defense Multiplier | Upgrade Cost | Cache size |
+---------- | ------ | ------------------ | ------------ | ---------- |
+1 | 1 | 1.2 | 30  | 5   |
+2 | 2 | 1.3 | 90  | 15  |
+3 | 3 | 1.4 | 270 | 45  |
+4 | 5 | 1.5 | 810 | 135 |
 
 ## Game Client
 The shell script `run_client.sh` provides a simple game client that a player
@@ -78,7 +81,7 @@ The server response is given below each respective player message.
     - `GOLD [current gold amount]`
     - `INCOME [current gold income]`
     - `ARMY [# of soldiers in city]`
-    - `[list of notifcations]` of the form `\* [#] sec ago: [contents]`, where `[contents]` can be any of...
+    - `[list of notifcations]` of the form `* [#] sec ago: [contents]`, where `[contents]` can be any of...
       - `Attacked by [city name] with [#] ([#] left with [#] gold), [#] of your [#] soldiers remained`
   - `[player key] COSTS`
     - `UPGRADE [gold to upgrade city] [time to upgrade city]`
@@ -88,18 +91,18 @@ The server response is given below each respective player message.
     - `UPGRADE FAILURE [gold needed] > [current gold]` otherwise
   - `[player key] TRAIN [# soldiers]`
     - `TRAIN [# soldiers] SUCCESS` if current gold >= cost of soldiers
-    - `INVALID TRAIN. VALID: [player key] TRAIN [# soldiers]` if wrong format or # soldiers is not a positive integer
-` if # soldiers is not a positive integer
+    - `INVALID TRAIN. VALID: [player key] TRAIN [# soldiers]` if wrong format or # soldiers is
+    not a positive integer
     - `TRAIN FAILURE Cannot train 0 soldiers` corner case
     - `TRAIN FAILURE [# soldiers] COSTS [gold needed] > [current gold]` otherwise
   - `[player key] ATTACK [city-name] [# soldiers]`
-    - `INVALID ATTACK. VALID: [player key] ATTACK [other city name] [# soldiers]\n`
+    - `INVALID ATTACK. VALID: [player key] ATTACK [other city name] [# soldiers]`
        if syntax is invalid (not 4 tokens or # soldiers is not a positive integer)
     - `ATTACK FAILURE Cannot attack with 0 soldiers`, or
     - `ATTACK FAILURE Cannot attack your own city`, or
     - `ATTACK FAILURE No city [city-name]`, or
     - `ATTACK FAILURE [# soldiers] > [# soldiers in city]`, or
-    - `ATTACK {WIN, LOSE} [#] of [#] return with [#] gold, [city-name] losses: [#] left from [#]`
+    - `ATTACK {WIN, LOSE} [#]/[#] return with [#] gold, [city-name] remaining: [#]/[#]`
        if none of the previous cases apply. If 0 soldiers return, the part of
        the message including and after the `,` is ommitted.
 

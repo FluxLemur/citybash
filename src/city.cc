@@ -2,6 +2,7 @@
 
 #include "city.h"
 
+int City::cache_[] = {5, 15, 45, 135};
 double City::defense_multiplier[] = {1.2, 1.3, 1.4, 1.5};
 city_id City::INVALID_CITY = -1;
 city_id City::current_id = -1;
@@ -49,7 +50,7 @@ int City::get_gold() {
   return int(gold_);
 }
 
-int City::change_gold(int delta) {
+int City::change_gold(int delta, bool cache) {
   int gold = get_gold();
   if (delta > 0) {
     gold_ += delta;
@@ -57,9 +58,15 @@ int City::change_gold(int delta) {
   }
 
   int new_gold = gold + delta;
-  if (new_gold < 0) {
-    gold_ = gold_ - gold;
-    return gold;
+
+  int offset = 0;
+  if (cache) {
+    offset = cache_[level_ - 1];
+  }
+
+  if (new_gold < offset) {
+    gold_ = gold_ - gold + offset;
+    return gold - offset;
   } else {
     gold_ += delta;
     return -delta;

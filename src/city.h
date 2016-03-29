@@ -17,6 +17,7 @@ typedef int city_id;
 class City {
   private:
     static city_id current_id;
+    static int cache_[];
     static int incomes_[];
     static int upgrade_costs_[];
     static int upgrade_times_[];
@@ -60,8 +61,10 @@ class City {
     /* Changes the gold in this city by [delta], such that [gold_] is not
      * less than 0.
      * Returns the difference between [gold_] before and after
+     * If [cache], the city saves prevents the change to drop below the amount
+     * of gold the city can cache.
      */
-    int change_gold(int delta);
+    int change_gold(int delta, bool cache);
 
     /* Returns info about the city:
      * [city name]

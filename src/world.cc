@@ -170,10 +170,10 @@ std::string World::city_attack(city_id from_city, std::string to_city_name,
   Battle b(num_attacking, num_defending, to_city.get_level());
 
   int attacker_capacity = b.attackers_remaining() * 2;
-  int gold_taken = to_city.change_gold(-attacker_capacity);
+  int gold_taken = to_city.change_gold(-attacker_capacity, true);
 
   attack_city.set_soldiers(all_from_soldiers - num_attacking + b.attackers_remaining());
-  attack_city.change_gold(gold_taken);
+  attack_city.change_gold(gold_taken, false);
   to_city.set_soldiers(b.defenders_remaining());
 
   std::string result = "ATTACK ";

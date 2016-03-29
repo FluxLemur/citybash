@@ -9,9 +9,10 @@ def array_print(xs):
 
 LEVELS = 5
 
-upgrade_costs = [int(10*np.power(3, i)) for i in range(1, LEVELS+1)]
-upgrade_times = np.multiply(5, range(1, LEVELS+1))
-incomes = [int(i + 0.1 * np.power(2, i)) for i in range(1, LEVELS+1)]
+upgrade_costs = [int(10*np.power(3, i)) for i in range(1, LEVELS)]
+upgrade_times = np.multiply(5, range(1, LEVELS))
+incomes = [int(i + 0.1 * np.power(2, i)) for i in range(1, LEVELS)]
+cache = [i / 6 for i in upgrade_costs]
 s_cost = 5 # soldier cost
 
 print 'upgrade costs: '
@@ -20,6 +21,8 @@ print 'upgrade times: '
 array_print(upgrade_times)
 print 'incomes: '
 array_print(incomes)
+print 'cache: '
+array_print(cache)
 
 print 'time to upgrade only by income: '
 for income, cost in zip(incomes, upgrade_costs):
