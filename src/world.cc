@@ -7,6 +7,8 @@
 
 World::World(int width) {
   width_ = width;
+  finish_info = "";
+  finish_condition_ = "";
 }
 
 World::~World() {
@@ -164,7 +166,7 @@ std::string World::city_attack(city_id from_city, std::string to_city_name,
   City &to_city = *name_it->second;
   int num_defending = to_city.get_soldiers();
   if (to_city.get_name().compare(attack_city.get_name()) == 0) {
-    return "ATTACK FAILURE Cannto attack your own city\n";
+    return "ATTACK FAILURE Cannot attack your own city\n";
   }
 
   Battle b(num_attacking, num_defending, to_city.get_level());
@@ -194,4 +196,29 @@ std::string World::city_attack(city_id from_city, std::string to_city_name,
 
   result += "\n";
   return result;
+}
+
+void World::force_finish() {
+  finish_condition_ = "GAME OVER: ADMIN has forced finish\n";
+  finish_info = all_city_info();
+}
+
+bool World::check_finish() {
+  std::map<city_id, City*>::iterator it;
+  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+    if (it->second->get_level() == City::MAX_LEVEL) {
+      force_finish();
+      finish_condition_ = "GAME OVER: " + it->second->get_name() + " has WON\n";
+      return true;
+    }
+  }
+  return false;
+}
+
+std::string World::get_final_info() {
+  return finish_info;
+}
+
+std::string World::finish_condition() {
+  return finish_condition_;
 }

@@ -79,8 +79,10 @@ std::string GameState::admin_request(std::string command) {
     case FINISHED:
       if (command.compare(LEADERBOARD) == 0) {
         return admin_leaderboard();
+      } else if (command.compare(MAP) == 0) {
+        return admin_map();
       } else {
-        return invalid_command(command, {LEADERBOARD});
+        return invalid_command(command, {LEADERBOARD, MAP});
       }
   }
 }
@@ -125,12 +127,12 @@ std::string GameState::admin_map() {
 std::string GameState::admin_force_finish() {
   std::cout << "** ADMIN FORCE GAME FINISH **\n";
   state_ = PlayState::FINISHED;
+  world_.force_finish();
   return FORCE_FINISH + ": SUCCESS\n";
 }
 
 std::string GameState::admin_leaderboard() {
-  // TODO
-  return LEADERBOARD + ": TODO\n";
+  return world_.get_final_info();
 }
 
 /******************************************************************************/
@@ -216,7 +218,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         return "INVALID: [" + command + "]\nVALID:\n" + PLAYER_VALID_COMMANDS;
       }
     case FINISHED:
-      return "ERROR: game has finished\n";
+      return world_.finish_condition();
   }
 }
 
@@ -245,7 +247,12 @@ std::string GameState::player_costs(city_id id) {
 }
 
 std::string GameState::player_upgrade(city_id id) {
-  return world_.city_upgrade(id);
+  std::string res = world_.city_upgrade(id);
+  if (world_.check_finish()) {
+    state_ = PlayState::FINISHED;
+    return res + "YOU WIN!\n";
+  }
+  return res;
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {
