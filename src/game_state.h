@@ -24,8 +24,6 @@
  *
  *  FINISHED
  *   - LEADERBOARD: return the player rankings for the game just played
- *   - TERMINATE: signals the server to terminate
- *
  *
  * Valid Player commands for each (relevant) state are:
  *  PLAYER_JOIN
@@ -73,7 +71,6 @@ class GameState {
     static std::string MAP;
     static std::string FORCE_FINISH;
     static std::string LEADERBOARD;
-    static std::string TERMINATE;
 
     std::string admin_start_game();
     std::string admin_players();
@@ -82,7 +79,6 @@ class GameState {
     std::string admin_map();
     std::string admin_force_finish();
     std::string admin_leaderboard();
-    std::string admin_terminate();
 
     static std::string PLAYER_VALID_COMMANDS;
     city_id city_id_for_key(std::string player_key);
