@@ -194,6 +194,9 @@ std::string World::city_attack(city_id from_city, std::string to_city_name,
     result += std::to_string(num_defending);
   }
 
+  to_city.add_attack_notification(attack_city.get_name(), num_attacking,
+      b.attackers_remaining(), gold_taken, num_defending, b.defenders_remaining());
+
   result += "\n";
   return result;
 }

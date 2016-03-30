@@ -117,17 +117,42 @@ std::string City::info() {
   info += "  INCOME " + std::to_string(incomes_[level_ - 1]) + "\n";
   info += "  ARMY   " + std::to_string(soldiers_) + "\n";
 
-  std::vector<std::string>::iterator it;
-  for (it = notifications_.begin(); it != notifications_.end(); it++) {
-    info += "  * ";
-    info += *it;
+  std::vector<std::pair<std::chrono::steady_clock::time_point, std::string>>::reverse_iterator it;
+  for (it = notifications_.rbegin(); it != notifications_.rend(); it++) {
+    info += "  " + notification_to_string(it->first, it->second);
     info += "\n";
   }
 
   return info;
 }
 
+std::string City::notification_to_string(std::chrono::steady_clock::time_point& time,
+    std::string& contents) {
+  std::chrono::duration<double> diff = std::chrono::steady_clock::now() - time;
+
+  // TODO: int or double precision?
+  return "* " + std::to_string(int(diff.count())) + " seconds ago: " + contents;
+}
+
+void City::add_attack_notification(std::string attacker_city, int n_attackers,
+    int n_attackers_remaining, int gold_stolen, int n_defenders,
+    int n_defenders_remaining) {
+
+  std::string contents = "Attacked by " + attacker_city;
+  contents += " with " + std::to_string(n_attackers);
+  contents += " (" + std::to_string(n_attackers_remaining) + " left with ";
+  contents += std::to_string(gold_stolen) + " gold), ";
+  contents += std::to_string(n_defenders_remaining) + " of your ";
+  contents += std::to_string(n_defenders) + " soldiers remained";
+
+  notifications_.push_back(
+      std::pair<std::chrono::steady_clock::time_point, std::string>
+      (std::chrono::steady_clock::now(), contents)
+  );
+}
+
 void City::clear_notifications() {
+  notifications_.clear();
 }
 
 int City::get_level() {

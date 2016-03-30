@@ -30,7 +30,7 @@ class City {
     int soldiers_; /* # currently in city */
     Location* loc_;
 
-    std::vector<std::string> notifications_;
+    std::vector<std::pair<std::chrono::steady_clock::time_point, std::string>> notifications_;
 
     /* updates the amount of gold the city has, depending on what the current
      * income is, the time since last call to update_gold()
@@ -55,8 +55,15 @@ class City {
     void add_neighbor(City* neighbor, float distance);
     void set_start_time(std::chrono::steady_clock::time_point time);
     int get_gold();
-    void clear_notifications();
     int get_level();
+
+    /* Notification related */
+    void clear_notifications();
+    std::string notification_to_string(std::chrono::steady_clock::time_point& time,
+      std::string& contents);
+    void add_attack_notification(std::string attacker_city, int n_attackers,
+        int n_attackers_remaining, int gold_stolen, int n_defenders,
+        int n_defender_remaining);
 
     /* Changes the gold in this city by [delta], such that [gold_] is not
      * less than 0.
