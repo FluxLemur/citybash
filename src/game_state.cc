@@ -52,7 +52,6 @@ std::string GameState::INFO = "INFO";
 std::string GameState::MAP = "MAP";
 std::string GameState::FORCE_FINISH = "FORCE_FINISH";
 std::string GameState::LEADERBOARD = "LEADERBOARD";
-std::string GameState::TERMINATE = "TERMINATE";
 
 std::string GameState::admin_request(std::string command) {
   switch (state_) {
@@ -80,10 +79,8 @@ std::string GameState::admin_request(std::string command) {
     case FINISHED:
       if (command.compare(LEADERBOARD) == 0) {
         return admin_leaderboard();
-      } else if (command.compare(TERMINATE) == 0) {
-        return admin_terminate();
       } else {
-        return invalid_command(command, {LEADERBOARD, TERMINATE});
+        return invalid_command(command, {LEADERBOARD});
       }
   }
 }
@@ -126,7 +123,6 @@ std::string GameState::admin_map() {
 }
 
 std::string GameState::admin_force_finish() {
-  // TODO
   std::cout << "** ADMIN FORCE GAME FINISH **\n";
   state_ = PlayState::FINISHED;
   return FORCE_FINISH + ": SUCCESS\n";
@@ -136,13 +132,6 @@ std::string GameState::admin_leaderboard() {
   // TODO
   return LEADERBOARD + ": TODO\n";
 }
-
-std::string GameState::admin_terminate() {
-  // TODO
-  std::cout << "** CityBash TERMINATING... **\n";
-  return TERMINATE + ": CityBash terminating...\n";
-}
-
 
 /******************************************************************************/
 // Player Requests
