@@ -17,7 +17,7 @@ The player controls _one_ city with assets and capabilities.
 ## Gameplay
 - World layout
   - Cities are placed at random in a 2D space such that distances between cities are variable.
-  - Among the cities that belong to players, the world also contains some randomly placed barbarian cities.
+  - Among the cities that belong to players, the world _may_ also contains some randomly placed NPC cities.
 - Gold Usage
   - Each city has a base income rate of gold at the start of the game.
   - A player can spend gold to increase their:
@@ -26,16 +26,16 @@ The player controls _one_ city with assets and capabilities.
 - City Level
   - The player's city starts at level 1.
   - Higher level cities yield higher gold income, and have a larger defense multiplier.
-  - Level 10 is the highest.
+  - Level 5 is the highest.
 - Military
   - The city houses a player's army. Take city A that has 20 soldiers.
   - An attack happens in 3 steps. Let’s say city A orders 10 soldiers to attack on city B (the other 10 will remain defending the city).
     1. Nothing happens for some time `T_ab`, proportional to the distance between cities A and B. The army is moving.
-    2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them. Some of B's gold is safely hidden in it's _cache_.
+    2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them. Some of B's gold is safely hidden in it's _cache_. NOTE, gold is automatically stored in a city's cache.
     3. After `T_ab` more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
 - Ending Conditions
   - The game stops when either:
-    1. A player upgrades to a level 10 city
+    1. A player upgrades to a level 5 city
     2. 20 minutes have passed
   - Players are awarded points based on city level, gold, and army size, and then ranked by point-count.
 
@@ -46,12 +46,14 @@ The player controls _one_ city with assets and capabilities.
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers can be trained asynchronously.
   - Armies move 1 distance unit/sec
 
-City Level | Income | Defense Multiplier | Upgrade Cost | Cache size |
----------- | ------ | ------------------ | ------------ | ---------- |
+City Level | Income (gold/s) | Defense Multiplier | Upgrade Cost (gold) | Cache size (gold) |
+---------- | --------------- | ------------------ | ------------ | ---------- |
 1 | 1 | 1.2 | 30  | 5   |
 2 | 2 | 1.3 | 90  | 15  |
 3 | 3 | 1.4 | 270 | 45  |
 4 | 5 | 1.5 | 810 | 135 |
+
+- Note that as soon as a city becomes level 5, the game is over.
 
 ## Game Client
 The shell script `run_client.sh` provides a simple game client that a player
@@ -70,6 +72,14 @@ key which the player uses to join the game with the following command:
 Once the game begins, players can send a selection of commands to list
 information about their city and the world, as well as commands to upgrade
 their city, train soldiers, and make attacks.
+
+The valid player commands are:
+- `WORLD` or `W`
+- `CITY` or `C`
+- `COSTS` or `CO`
+- `UPGRADE` or `U`
+- `TRAIN #` or `T`
+- `ATTACK city #` or `A`
 
 The server response is given below each respective player message.
   - `[player key] WORLD`

@@ -187,19 +187,19 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         return "INVALID PLAYER KEY: [" + player_key + "]\n";
       }
 
-      if (command.compare(Requests::WORLD) == 0) {
+      if (command.compare(Requests::WORLD) * command.compare("W") == 0) {
         return player_world(id);
 
-      } else if (command.compare(Requests::CITY) == 0) {
+      } else if (command.compare(Requests::CITY) * command.compare("C") == 0) {
         return player_city(id);
 
-      } else if (command.compare(Requests::COSTS) == 0) {
+      } else if (command.compare(Requests::COSTS) * command.compare("CO") == 0) {
         return player_costs(id);
 
-      } else if (command.compare(Requests::UPGRADE) == 0) {
+      } else if (command.compare(Requests::UPGRADE) * command.compare("U") == 0) {
         return player_upgrade(id);
 
-      } else if (command.compare(Requests::TRAIN) == 0) {
+      } else if (command.compare(Requests::TRAIN) * command.compare("T") == 0) {
         if (split_req.size() < 3 || !Utils::is_number(split_req[2])) {
           return Responses::INVALID_TRAIN;
         } else {
@@ -207,7 +207,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
           return player_train(id, num_soldiers);
         }
 
-      } else if (command.compare(Requests::ATTACK) == 0) {
+      } else if (command.compare(Requests::ATTACK) * command.compare("A") == 0) {
         if (split_req.size() < 4 || !Utils::is_number(split_req[3])) {
           return Responses::INVALID_ATTACK;
         } else {
