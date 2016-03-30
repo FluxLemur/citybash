@@ -24,6 +24,7 @@
  *
  *  FINISHED
  *   - LEADERBOARD: return the player rankings for the game just played
+ *   - MAP (as above)
  *
  * Valid Player commands for each (relevant) state are:
  *  PLAYER_JOIN
