@@ -78,8 +78,8 @@ The valid player commands are:
 - `CITY` or `C`
 - `COSTS` or `CO`
 - `UPGRADE` or `U`
-- `TRAIN #` or `T`
-- `ATTACK city #` or `A`
+- `TRAIN #` or `T #`
+- `ATTACK city #` or `A city #`
 
 The server response is given below each respective player message.
   - `[player key] WORLD`
