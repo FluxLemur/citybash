@@ -1,3 +1,3 @@
 #! /bin/bash
 
-rlwrap python simple_client.py localhost 12345
+rlwrap python simple_client.py 12345 localhost

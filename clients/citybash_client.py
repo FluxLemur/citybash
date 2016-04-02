@@ -4,12 +4,12 @@ import utils
 
 if __name__ == '__main__':
     if len(sys.argv) != 5:
-        print "Usage: {} [host] [port]".format(sys.argv[0])\
+        print "Usage: {} [port] [host]".format(sys.argv[0])\
               + " [player key] [city_name_no_spaces]"
         quit()
 
-    host = sys.argv[1]
-    port = int(sys.argv[2])
+    port = int(sys.argv[1])
+    host = sys.argv[2]
     key = sys.argv[3]
     name = sys.argv[4]
 
