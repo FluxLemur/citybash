@@ -131,19 +131,19 @@ std::string City::notification_to_string(std::chrono::steady_clock::time_point& 
   std::chrono::duration<double> diff = std::chrono::steady_clock::now() - time;
 
   // TODO: int or double precision?
-  return "* " + std::to_string(int(diff.count())) + " seconds ago: " + contents;
+  return "* " + std::to_string(int(diff.count())) + " sec ago: " + contents;
 }
 
 void City::add_attack_notification(std::string attacker_city, int n_attackers,
     int n_attackers_remaining, int gold_stolen, int n_defenders,
     int n_defenders_remaining) {
 
-  std::string contents = "Attacked by " + attacker_city;
-  contents += " with " + std::to_string(n_attackers);
-  contents += " (" + std::to_string(n_attackers_remaining) + " left with ";
-  contents += std::to_string(gold_stolen) + " gold), ";
-  contents += std::to_string(n_defenders_remaining) + " of your ";
-  contents += std::to_string(n_defenders) + " soldiers remained";
+  std::string contents = attacker_city + " attacked ";
+  contents += std::to_string(n_attackers_remaining);
+  contents += "/" + std::to_string(n_attackers) + " took ";
+  contents += std::to_string(gold_stolen) + " gold, ";
+  contents += std::to_string(n_defenders_remaining) + "/";
+  contents += std::to_string(n_defenders) + " defenders remained";
 
   notifications_.push_back(
       std::pair<std::chrono::steady_clock::time_point, std::string>
