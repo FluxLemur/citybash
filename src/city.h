@@ -112,6 +112,7 @@ class City {
      *   TRAIN FAILURE [# soldiers] COSTS [gold needed] > [current gold]
      */
     std::string train(int num_soldiers);
+    std::string train_max();
 
     int get_soldiers();
     void set_soldiers(int n);

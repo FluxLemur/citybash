@@ -73,12 +73,13 @@ Once the game begins, players can send a selection of commands to list
 information about their city and the world, as well as commands to upgrade
 their city, train soldiers, and make attacks.
 
-The valid player commands are:
+The valid player commands are (_not_ case sensitive):
 - `WORLD` or `W`
 - `CITY` or `C`
 - `COSTS` or `CO`
 - `UPGRADE` or `U`
 - `TRAIN #` or `T #`
+  - `TRAIN max` uses all current gold to train soldiers
 - `ATTACK city #` or `A city #`
 
 The server response is given below each respective player message.

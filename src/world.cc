@@ -145,7 +145,11 @@ std::string World::city_upgrade(city_id id) {
 std::string World::city_train(city_id id, int soldiers) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
   City &city = *it->second;
-  return city.train(soldiers);
+  if (soldiers == -1) {
+    return city.train_max();
+  } else {
+    return city.train(soldiers);
+  }
 }
 
 std::string World::city_attack(city_id from_city, std::string to_city_name,

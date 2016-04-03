@@ -1,6 +1,7 @@
 #include <algorithm>
-#include <string>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "utils.h"
@@ -90,4 +91,12 @@ int Utils::random_int(const int max) {
   }
 
   return int(std::rand() % max);
+}
+
+int Utils::safe_stoi(const std::string &str) {
+  try {
+    return std::stoi(str);
+  } catch (...) {
+    return 0;
+  }
 }

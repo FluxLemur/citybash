@@ -189,6 +189,11 @@ std::string City::upgrade() {
   return response;
 }
 
+std::string City::train_max() {
+  int num_soldiers = get_gold() / train_cost_;
+  return train(num_soldiers);
+}
+
 std::string City::train(int num_soldiers) {
   int gold = get_gold();
   int train_cost = num_soldiers * train_cost_;

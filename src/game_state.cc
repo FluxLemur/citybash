@@ -200,10 +200,13 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         return player_upgrade(id);
 
       } else if (command.compare(Requests::TRAIN) * command.compare("T") == 0) {
-        if (split_req.size() < 3 || !Utils::is_number(split_req[2])) {
+        if (split_req.size() < 3 || (!Utils::is_number(split_req[2]) &&
+            split_req[2].compare("MAX") != 0)) {
           return Responses::INVALID_TRAIN;
+        } else if (split_req[2].compare("MAX") == 0) {
+          return player_train(id, -1);
         } else {
-          int num_soldiers = std::stoi(split_req[2]);
+          int num_soldiers = Utils::safe_stoi(split_req[2]);
           return player_train(id, num_soldiers);
         }
 
@@ -211,7 +214,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         if (split_req.size() < 4 || !Utils::is_number(split_req[3])) {
           return Responses::INVALID_ATTACK;
         } else {
-          int num_soldiers = std::stoi(split_req[3]);
+          int num_soldiers = Utils::safe_stoi(split_req[3]);
           return player_attack(id, split_req[2], num_soldiers);
         }
       } else {

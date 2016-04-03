@@ -81,6 +81,7 @@ class World {
     std::string city_upgrade(city_id id);
 
     /* train and attack have preconditions that soldiers is > 0
+     * EXCPET for train, if soldiers is -1, then will use maximum possible #
      */
     std::string city_train(city_id id, int soldiers);
     std::string city_attack(city_id from_city, std::string to_city_name, int soldiers);
