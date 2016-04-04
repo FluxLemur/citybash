@@ -10,6 +10,8 @@
 #include <vector>
 #include <string>
 
+#include <event2/event.h>
+
 #include "game_state.h"
 #include "city.h"
 
@@ -19,13 +21,14 @@ class GameServer {
     static std::string WELCOME_MESSAGE_;
     static const int BACKLOG_ = 10;
     std::string admin_key_;
-    std::string handle_req_(std::string request);
 
   public:
     GameServer(std::string admin_key);
+    std::string handle_req(std::string request);
+    static void do_accept(evutil_socket_t listener, short event, void *arg);
 
     /* The server main loop. */
-    [[noreturn]] void run();
+    void run();
 };
 
 #endif // GAME_SERVER_H

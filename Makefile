@@ -1,5 +1,5 @@
 CXX := clang++
-FLAGS := -std=c++11 -Werror -Weverything -Wno-c++98-compat -Wno-global-constructors -Wno-exit-time-destructors -Wno-old-style-cast -Wno-c++98-compat-pedantic -Wno-padded
+FLAGS := -std=c++11 -levent_core -Werror -Weverything -Wno-c++98-compat -Wno-global-constructors -Wno-exit-time-destructors -Wno-old-style-cast -Wno-c++98-compat-pedantic -Wno-padded
 CXXFLAGS := -O $(FLAGS)
 CXXFLAGSH := -Ofast $(CXXFLAGS)
 
