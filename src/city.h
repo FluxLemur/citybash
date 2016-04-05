@@ -5,6 +5,7 @@
 #ifndef CITY_H
 #define CITY_H
 
+#include <event2/event.h>
 #include <chrono>
 #include <map>
 #include <string>
@@ -47,6 +48,9 @@ class City {
     static city_id get_next_city_id();
     static std::string city_id_string(city_id id);
     static int MAX_LEVEL;
+
+    /* Scheduled functions */
+    static void train_callback(evutil_socket_t listener, short event, void *arg);
 
     City(std::string name);
     std::string get_name();
@@ -116,6 +120,7 @@ class City {
 
     int get_soldiers();
     void set_soldiers(int n);
+    void add_soldiers(int n);
 };
 
 #endif // CITY_H

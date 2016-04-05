@@ -1,6 +1,9 @@
+#include <event2/event.h>
+#include <iostream>
 #include <string>
 
 #include "city.h"
+#include "event_manager.h"
 
 int City::cache_[] = {5, 15, 45, 135};
 double City::defense_multiplier[] = {1.2, 1.3, 1.4, 1.5};
@@ -191,7 +194,32 @@ std::string City::upgrade() {
 
 std::string City::train_max() {
   int num_soldiers = get_gold() / train_cost_;
+
+  if (num_soldiers == 0) {
+    return "TRAIN FAILURE Cannot train 0 soldiers\n";
+  }
   return train(num_soldiers);
+}
+
+struct train_arg {
+  City *city;
+  int num_soldiers;
+  struct event *event_p;
+};
+
+void City::train_callback(evutil_socket_t listener, short event, void *arg) {
+  (void)(event);    // UNUSED
+  (void)(listener); // UNUSED
+
+  struct train_arg *train_args = (struct train_arg *) arg;
+
+  train_args->city->add_soldiers(train_args->num_soldiers);
+
+  std::cout << "trained " << train_args->num_soldiers << " soldiers for ";
+  std::cout << train_args->city->get_name() << std::endl;
+
+  event_free(train_args->event_p);
+  delete train_args;
 }
 
 std::string City::train(int num_soldiers) {
@@ -200,7 +228,22 @@ std::string City::train(int num_soldiers) {
 
   if (gold >= train_cost) {
     gold_ -= train_cost;
-    soldiers_ += num_soldiers;
+
+    // create and add an event to train soldiers after train_time_
+    struct timeval tv;
+    tv.tv_sec = train_time_;
+    tv.tv_usec = 0;
+
+    struct train_arg *train_args = new train_arg;
+    train_args->city = this;
+    train_args->num_soldiers = num_soldiers;
+
+    struct event *timer_event;
+    timer_event = evtimer_new(EventManager::base, train_callback, (void *) train_args);
+    train_args->event_p = timer_event;
+
+    evtimer_add(timer_event, &tv);
+
     return "TRAIN " + std::to_string(num_soldiers) + " SUCCESS\n";
   }
 
@@ -213,6 +256,12 @@ std::string City::train(int num_soldiers) {
 
 int City::get_soldiers() {
   return soldiers_;
+}
+
+void City::add_soldiers(int n) {
+  if (n >= 0) {
+    soldiers_ += n;
+  }
 }
 
 void City::set_soldiers(int n) {
