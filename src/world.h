@@ -26,8 +26,6 @@ class World {
     void randomly_place_cities();
     void generate_pairwise_distances();
     std::chrono::steady_clock::time_point start_time_;
-    std::string finish_info;
-    std::string finish_condition_;
 
   public:
     World(int width=50);
@@ -53,13 +51,6 @@ class World {
      * time.
      */
     void create();
-
-    /* Returns true iff there exists a city with level 5
-     */
-    bool check_finish();
-    void force_finish();
-    std::string finish_condition();
-    std::string get_final_info();
 
     /* Returns information about other cities, relative to the City
      * corresponding to [id].

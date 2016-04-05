@@ -3,6 +3,7 @@
 
 #include "city.h"
 #include "constants.h"
+#include "event_manager.h"
 #include "game_state.h"
 #include "utils.h"
 
@@ -41,6 +42,25 @@ std::string GameState::generate_key() {
   return key;
 }
 
+World &GameState::get_world() {
+  return world_;
+}
+
+void GameState::finish_state() {
+  state_ = PlayState::FINISHED;
+}
+
+void GameState::end_game(evutil_socket_t listener, short event, void *arg) {
+  (void)(listener); // UNUSED
+  (void)(event);    // UNUSED
+
+  GameState * gs = (GameState *) arg;
+  std::cout << "GAME OVER!" << std::endl;
+
+  gs->finish_info = gs->get_world().all_city_info();
+  gs->finish_condition = "GAME OVER: " + City::winning_city->get_name() + " has WON\n";
+  gs->finish_state();
+}
 
 /******************************************************************************/
 // Admin Requests
@@ -91,6 +111,9 @@ std::string GameState::admin_start_game() {
   std::cout << "** STARTING GAME **\n";
   world_.create();
   state_ = PlayState::PLAYING;
+
+  EventManager::end_game_event =
+    event_new(EventManager::base, (evutil_socket_t) -1, 0, end_game, (void *) this);
   return START_GAME + ": SUCCESS\n";
 }
 
@@ -127,12 +150,13 @@ std::string GameState::admin_map() {
 std::string GameState::admin_force_finish() {
   std::cout << "** ADMIN FORCE GAME FINISH **\n";
   state_ = PlayState::FINISHED;
-  world_.force_finish();
+  finish_info = world_.all_city_info();
+  finish_condition = "GAME OVER: ADMIN has forced finish\n";
   return FORCE_FINISH + ": SUCCESS\n";
 }
 
 std::string GameState::admin_leaderboard() {
-  return world_.get_final_info();
+  return finish_info;
 }
 
 /******************************************************************************/
@@ -221,7 +245,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
         return "INVALID: [" + command + "]\nVALID:\n" + PLAYER_VALID_COMMANDS;
       }
     case FINISHED:
-      return world_.finish_condition();
+      return player_finished(id);
   }
 }
 
@@ -250,12 +274,7 @@ std::string GameState::player_costs(city_id id) {
 }
 
 std::string GameState::player_upgrade(city_id id) {
-  std::string res = world_.city_upgrade(id);
-  if (world_.check_finish()) {
-    state_ = PlayState::FINISHED;
-    return res + "YOU WIN!\n";
-  }
-  return res;
+  return world_.city_upgrade(id);
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {
@@ -271,4 +290,11 @@ std::string GameState::player_attack(city_id from_city,
     return "ATTACK FAILURE Cannot attack with 0 soldiers\n";
   }
   return world_.city_attack(from_city, to_city_name, soldiers);
+}
+
+std::string GameState::player_finished(city_id id) {
+  if (City::winning_city && id == City::winning_city->get_id()) {
+    return "GAME OVER: YOU have WON!\n";
+  }
+  return finish_condition;
 }

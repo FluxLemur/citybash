@@ -1,5 +1,4 @@
 #include <event2/event.h>
-#include <iostream>
 #include <string>
 
 #include "city.h"
@@ -9,6 +8,7 @@ int City::cache_[] = {5, 15, 45, 135};
 double City::defense_multiplier[] = {1.2, 1.3, 1.4, 1.5};
 city_id City::INVALID_CITY = -1;
 city_id City::current_id = -1;
+City * City::winning_city;
 
 int City::incomes_[] = {1, 2, 3, 5};
 int City::upgrade_costs_[] = {30, 90, 270, 810};
@@ -27,11 +27,12 @@ std::string City::city_id_string(city_id id) {
   return std::to_string(id);
 }
 
-City::City(std::string name) {
+City::City(std::string name, city_id id) {
   level_ = 1;
   gold_ = 0.0;
   soldiers_ = 0;
   name_ = name;
+  id_ = id;
 }
 
 void City::set_start_time(std::chrono::steady_clock::time_point time) {
@@ -172,6 +173,30 @@ std::string City::costs() {
   return costs;
 }
 
+struct upgrade_arg {
+  City *city;
+  struct event *event_p;
+};
+
+void City::increase_level() {
+  level_++;
+}
+
+void City::upgrade_callback(evutil_socket_t listener, short event, void *arg) {
+  (void)(event);    // UNUSED
+  (void)(listener); // UNUSED
+
+  struct upgrade_arg *upgrade_args = (struct upgrade_arg *) arg;
+  upgrade_args->city->increase_level();
+
+  if (upgrade_args->city->get_level() == City::MAX_LEVEL && !winning_city) {
+    winning_city = upgrade_args->city;
+    EventManager::trigger_end_game();
+  }
+  event_free(upgrade_args->event_p);
+  delete upgrade_args;
+}
+
 std::string City::upgrade() {
   int gold = get_gold();
   int upgrade_cost = upgrade_costs_[level_ - 1];
@@ -180,9 +205,23 @@ std::string City::upgrade() {
     return "UPGRADE FAILURE MAX LEVEL\n";
   }
 
-  if (gold > upgrade_cost) {
+  if (gold >= upgrade_cost) {
     gold_ -= upgrade_cost;
-    level_++;
+
+    // create and add an event to train soldiers after train_time_
+    struct timeval tv;
+    tv.tv_sec = upgrade_times_[level_ - 1];
+    tv.tv_usec = 0;
+
+    struct upgrade_arg *upgrade_args = new upgrade_arg;
+    upgrade_args->city = this;
+
+    struct event *upgrade_event;
+    upgrade_event = evtimer_new(EventManager::base, upgrade_callback, (void *) upgrade_args);
+    upgrade_args->event_p = upgrade_event;
+
+    evtimer_add(upgrade_event, &tv);
+
     return "UPGRADE SUCCESS\n";
   }
 
@@ -212,12 +251,7 @@ void City::train_callback(evutil_socket_t listener, short event, void *arg) {
   (void)(listener); // UNUSED
 
   struct train_arg *train_args = (struct train_arg *) arg;
-
   train_args->city->add_soldiers(train_args->num_soldiers);
-
-  std::cout << "trained " << train_args->num_soldiers << " soldiers for ";
-  std::cout << train_args->city->get_name() << std::endl;
-
   event_free(train_args->event_p);
   delete train_args;
 }
@@ -238,11 +272,11 @@ std::string City::train(int num_soldiers) {
     train_args->city = this;
     train_args->num_soldiers = num_soldiers;
 
-    struct event *timer_event;
-    timer_event = evtimer_new(EventManager::base, train_callback, (void *) train_args);
-    train_args->event_p = timer_event;
+    struct event *train_event;
+    train_event = evtimer_new(EventManager::base, train_callback, (void *) train_args);
+    train_args->event_p = train_event;
 
-    evtimer_add(timer_event, &tv);
+    evtimer_add(train_event, &tv);
 
     return "TRAIN " + std::to_string(num_soldiers) + " SUCCESS\n";
   }
@@ -268,4 +302,8 @@ void City::set_soldiers(int n) {
   if (n >= 0) {
     soldiers_ = n;
   }
+}
+
+city_id City::get_id() {
+  return id_;
 }

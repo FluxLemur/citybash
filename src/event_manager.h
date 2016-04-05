@@ -10,7 +10,10 @@
 class EventManager {
   public:
     static struct event_base *base;
+    static struct event *end_game_event;
+
     static void init();
+    static void trigger_end_game();
 };
 
 #endif // EVENT_MANAGER_H

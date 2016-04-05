@@ -25,6 +25,7 @@ class City {
     static int train_time_;
     static int train_cost_;
 
+    city_id id_;
     std::string name_;
     int level_;
     double gold_;
@@ -48,11 +49,13 @@ class City {
     static city_id get_next_city_id();
     static std::string city_id_string(city_id id);
     static int MAX_LEVEL;
+    static City *winning_city;
 
-    /* Scheduled functions */
+    /* Callback functions for timed events */
     static void train_callback(evutil_socket_t listener, short event, void *arg);
+    static void upgrade_callback(evutil_socket_t listener, short event, void *arg);
 
-    City(std::string name);
+    City(std::string name, city_id id);
     std::string get_name();
     void set_location(Location* l);
     Location get_location();
@@ -107,6 +110,7 @@ class City {
      *   UPGRADE FAILURE [gold needed] > [current gold]
      */
     std::string upgrade();
+    void increase_level();
 
     /* Precondition: num_soldiers > 0
      * Returns:
@@ -121,6 +125,8 @@ class City {
     int get_soldiers();
     void set_soldiers(int n);
     void add_soldiers(int n);
+
+    city_id get_id();
 };
 
 #endif // CITY_H

@@ -91,6 +91,7 @@ class GameState {
     std::string player_upgrade(city_id id);
     std::string player_train(city_id id, int soldiers);
     std::string player_attack(city_id from_city, std::string to_city, int soldiers);
+    std::string player_finished(city_id id);
 
   public:
     GameState();
@@ -99,6 +100,13 @@ class GameState {
     std::string admin_request(std::string command);
     std::string player_request(std::vector<std::string> split_req);
 
+    /* Ending the game */
+    static void end_game(evutil_socket_t listener, short event, void *arg);
+    void finish_state();
+    std::string finish_condition;
+    std::string finish_info;
+
+    World &get_world();
 };
 
 #endif // GAME_STATE_H
