@@ -95,8 +95,8 @@ The server response is given below each respective player message.
     - `[list of notifcations]` of the form `* [#] sec ago: [contents]`, where `[contents]` can be any of...
       - `[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained`
   - `[player key] COSTS`
-    - `UPGRADE [gold to upgrade city] [time to upgrade city]`
-    - `TRAIN [gold to train soldier] [time to train soldier]`
+    - `UPGRADE [gold to upgrade city] gold, [time to upgrade city] sec`
+    - `TRAIN [gold to train soldier] gold, [time to train soldier] sec`
   - `[player key] UPGRADE`
     - `UPGRADE SUCCESS` if current gold >= upgrade cost
     - `UPGRADE FAILURE [gold needed] > [current gold]` otherwise

@@ -165,9 +165,9 @@ int City::get_level() {
 std::string City::costs() {
   std::string costs = "";
   costs += "UPGRADE " + std::to_string(upgrade_costs_[level_ - 1]);
-  costs += " " + std::to_string(upgrade_times_[level_ - 1]) + "\n";
+  costs += " gold, " + std::to_string(upgrade_times_[level_ - 1]) + " sec\n";
   costs += "TRAIN   " + std::to_string(train_cost_);
-  costs += " " + std::to_string(train_time_) + "\n";
+  costs += " gold, " + std::to_string(train_time_) + " sec\n";
 
   return costs;
 }
