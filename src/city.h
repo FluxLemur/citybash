@@ -31,6 +31,7 @@ class City {
     double gold_;
     int soldiers_; /* # currently in city */
     Location* loc_;
+    bool upgrading_;
 
     std::vector<std::pair<std::chrono::steady_clock::time_point, std::string>> notifications_;
 
@@ -64,6 +65,7 @@ class City {
     int get_gold();
     int get_level();
     float distance_to(City *other_city);
+    void finish_upgrading();
 
     /* Notification related */
     void clear_notifications();
@@ -78,10 +80,8 @@ class City {
     /* Changes the gold in this city by [delta], such that [gold_] is not
      * less than 0.
      * Returns the difference between [gold_] before and after
-     * If [cache], the city saves prevents the change to drop below the amount
-     * of gold the city can cache.
      */
-    int change_gold(int delta, bool cache);
+    int change_gold(int delta);
 
     /* Returns info about the city:
      * [city name]

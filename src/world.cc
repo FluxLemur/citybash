@@ -121,7 +121,7 @@ std::string World::all_city_info() {
   std::string info_str;
   std::map<city_id, City*>::iterator it;
   for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
-    info_str += it->second->info(false) + "\n";
+    info_str += it->second->info(true) + "\n";
   }
   return info_str;
 }
@@ -185,7 +185,7 @@ void World::battle_result_callback(evutil_socket_t listener, short event, void *
       args->num_attacking, args->attackers_remaining, args->gold_taken,
       args->num_defending, args->defenders_remaining);
 
-  args->from_city->change_gold(args->gold_taken, false);
+  args->from_city->change_gold(args->gold_taken);
   args->from_city->change_soldiers(args->attackers_remaining);
 
   event_free(args->event_p);
@@ -201,7 +201,7 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
   Battle b(args->num_attacking, args->num_defending, args->to_city->get_level());
 
   int attacker_capacity = b.attackers_remaining() * 2;
-  int gold_taken = args->to_city->change_gold(-attacker_capacity, true);
+  int gold_taken = args->to_city->change_gold(-attacker_capacity);
 
   args->to_city->set_soldiers(b.defenders_remaining());
 

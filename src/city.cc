@@ -33,6 +33,7 @@ City::City(std::string name, city_id id) {
   soldiers_ = 0;
   name_ = name;
   id_ = id;
+  upgrading_ = false;
 }
 
 void City::set_start_time(std::chrono::steady_clock::time_point time) {
@@ -54,26 +55,26 @@ int City::get_gold() {
   return int(gold_);
 }
 
-int City::change_gold(int delta, bool cache) {
+int City::change_gold(int delta) {
   int gold = get_gold();
-  if (delta > 0) {
+  if (delta >= 0) {
     gold_ += delta;
     return -delta;
   }
 
   int new_gold = gold + delta;
+  int cache = cache_[level_ - 1];
 
-  int offset = 0;
-  if (cache) {
-    offset = cache_[level_ - 1];
-  }
-
-  if (new_gold < offset) {
-    gold_ = gold_ - gold + offset;
-    return gold - offset;
-  } else {
+  if (new_gold >= cache) {
     gold_ += delta;
     return -delta;
+  } else {
+    if (cache > gold) {
+      return 0;
+    } else {
+      gold_ = gold_ - gold + cache;
+      return gold - cache;
+    }
   }
 }
 
@@ -209,6 +210,10 @@ void City::increase_level() {
   level_++;
 }
 
+void City::finish_upgrading() {
+  upgrading_ = false;
+}
+
 void City::upgrade_callback(evutil_socket_t listener, short event, void *arg) {
   (void)(event);    // UNUSED
   (void)(listener); // UNUSED
@@ -220,6 +225,7 @@ void City::upgrade_callback(evutil_socket_t listener, short event, void *arg) {
     winning_city = upgrade_args->city;
     EventManager::trigger_end_game();
   }
+  upgrade_args->city->finish_upgrading();
   event_free(upgrade_args->event_p);
   delete upgrade_args;
 }
@@ -232,8 +238,13 @@ std::string City::upgrade() {
     return "UPGRADE FAILURE MAX LEVEL\n";
   }
 
+  if (upgrading_) {
+    return "UPGRADE FAILURE already upgrading\n";
+  }
+
   if (gold >= upgrade_cost) {
     gold_ -= upgrade_cost;
+    upgrading_ = true;
 
     // create and add an event to train soldiers after train_time_
     struct timeval tv;
