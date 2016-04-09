@@ -3,6 +3,7 @@
 const std::string Requests::JOIN = "JOIN";
 const std::string Requests::WORLD = "WORLD";
 const std::string Requests::CITY = "CITY";
+const std::string Requests::SHORTCITY = "SHORTCITY";
 const std::string Requests::COSTS = "COSTS";
 const std::string Requests::UPGRADE = "UPGRADE";
 const std::string Requests::ATTACK = "ATTACK";

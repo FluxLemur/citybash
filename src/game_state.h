@@ -87,6 +87,7 @@ class GameState {
     std::string player_join(city_id id, std::string city_name);
     std::string player_world(city_id id);
     std::string player_city(city_id id);
+    std::string player_shortcity(city_id id);
     std::string player_costs(city_id id);
     std::string player_upgrade(city_id id);
     std::string player_train(city_id id, int soldiers);

@@ -90,7 +90,7 @@ class City {
      * INCOME [current gold income]
      * ARMY [current # of soldiers]
      */
-    std::string info();
+    std::string info(bool less);
 
     /* Gives information about other cities, relative to [this].
      * Sample output:

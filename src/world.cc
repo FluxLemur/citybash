@@ -116,16 +116,16 @@ std::string World::all_city_info() {
   std::string info_str;
   std::map<city_id, City*>::iterator it;
   for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
-    info_str += it->second->info() + "\n";
+    info_str += it->second->info(false) + "\n";
   }
   return info_str;
 }
 
-std::string World::city_info(city_id id) {
+std::string World::city_info(city_id id, bool less) {
   std::map<city_id, City*>::iterator it = city_by_id_.find(id);
   City &city = *it->second;
 
-  std::string info = city.info();
+  std::string info = city.info(less);
   city.clear_notifications();
   return info;
 }

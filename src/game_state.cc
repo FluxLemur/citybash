@@ -166,6 +166,7 @@ std::string GameState::admin_leaderboard() {
 std::string GameState::PLAYER_VALID_COMMANDS =
     "  [player key] WORLD\n"
     "  [player key] CITY\n"
+    "  [player key] SHORTCITY\n"
     "  [player key] COSTS\n"
     "  [player key] UPGRADE\n"
     "  [player key] TRAIN [# soldiers]\n"
@@ -195,7 +196,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
     case PLAYER_JOIN:
       if (split_req.size() != 3 || command.compare(Requests::JOIN) != 0) {
         if (id != City::INVALID_CITY) {
-          return "Please wait for the game to start\n";
+          return "ERROR: Please wait for the game to start\n";
         } else {
           return "INVALID SYNTAX\nVALID: [player key] JOIN [city_name_no_spaces]\n";
         }
@@ -216,6 +217,9 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
 
       } else if (command.compare(Requests::CITY) * command.compare("C") == 0) {
         return player_city(id);
+
+      } else if (command.compare(Requests::SHORTCITY) * command.compare("SC") == 0) {
+        return player_shortcity(id);
 
       } else if (command.compare(Requests::COSTS) * command.compare("CO") == 0) {
         return player_costs(id);
@@ -273,6 +277,10 @@ std::string GameState::player_city(city_id id) {
   return world_.city_info(id);
 }
 
+std::string GameState::player_shortcity(city_id id) {
+  return world_.city_info(id, true);
+}
+
 std::string GameState::player_costs(city_id id) {
   return world_.city_costs(id);
 }
@@ -282,7 +290,7 @@ std::string GameState::player_upgrade(city_id id) {
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {
-  if (soldiers <= 0) {
+  if (soldiers == 0) {
     return "TRAIN FAILURE. Cannot train 0 soldiers\n";
   }
   return world_.city_train(id, soldiers);

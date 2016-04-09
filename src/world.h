@@ -67,7 +67,7 @@ class World {
     /* the below city_* functions have a precondition that [id] is contained in
      * city_by_id_ and the corresponding city is initialized
      */
-    std::string city_info(city_id id);
+    std::string city_info(city_id id, bool less=false);
     std::string city_costs(city_id id);
     std::string city_upgrade(city_id id);
 

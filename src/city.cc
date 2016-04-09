@@ -123,18 +123,25 @@ float City::distance_to(City *other_city) {
   return it->second;
 }
 
-std::string City::info() {
+std::string City::info(bool less) {
   std::string info = "";
-  info += name_ + "\n";
-  info += "  LEVEL  " + std::to_string(level_) + "\n";
-  info += "  GOLD   " + std::to_string(get_gold()) + "\n";
-  info += "  INCOME " + std::to_string(incomes_[level_ - 1]) + "\n";
+  std::string delim = "";
+  if (!less) {
+    delim = "\n";
+  }
+  info += name_ + delim;
+  info += "  LEVEL  " + std::to_string(level_) + delim;
+  info += "  GOLD   " + std::to_string(get_gold()) + delim;
+  info += "  INCOME " + std::to_string(incomes_[level_ - 1]) + delim;
   info += "  ARMY   " + std::to_string(soldiers_) + "\n";
 
-  std::vector<std::pair<std::chrono::steady_clock::time_point, std::string>>::reverse_iterator it;
-  for (it = notifications_.rbegin(); it != notifications_.rend(); it++) {
-    info += "  " + notification_to_string(it->first, it->second);
-    info += "\n";
+  if (!less) {
+    std::vector<std::pair<std::chrono::steady_clock::time_point,
+                          std::string>>::reverse_iterator it;
+    for (it = notifications_.rbegin(); it != notifications_.rend(); it++) {
+      info += "  " + notification_to_string(it->first, it->second);
+      info += "\n";
+    }
   }
 
   return info;

@@ -17,4 +17,4 @@ tests:
 	$(CXX) $(CXXFLAGS) $(TEST_SRCS) -o tests
 
 clean:
-	rm -f citybash tests
+	rm -f citybash tests messages

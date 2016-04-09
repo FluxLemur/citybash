@@ -16,6 +16,7 @@ class Requests {
     static const std::string JOIN;
     static const std::string WORLD;
     static const std::string CITY;
+    static const std::string SHORTCITY;
     static const std::string COSTS;
     static const std::string UPGRADE;
     static const std::string ATTACK;
