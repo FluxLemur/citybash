@@ -75,6 +75,11 @@ void World::randomly_place_cities() {
   }
 }
 
+bool World::city_id_exists(city_id id) {
+  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  return it != city_by_id_.end();
+}
+
 void World::generate_pairwise_distances() {
   std::map<city_id, City*>::iterator it1;
   std::map<city_id, City*>::iterator it2;

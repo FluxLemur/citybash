@@ -36,6 +36,8 @@ class World {
       SUCCESS
     };
 
+    bool city_id_exists(city_id id);
+
     /* Attempts to add a city to the world with a given name. If a city with
      * such a name already exists, the city is not added and the function
      * returns false. Otherwise, the city is added to the world, and true is

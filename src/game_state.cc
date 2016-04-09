@@ -112,6 +112,14 @@ std::string GameState::admin_start_game() {
   world_.create();
   state_ = PlayState::PLAYING;
 
+  std::map<std::string, city_id>::iterator it;
+  for (it = city_map_.begin(); it != city_map_.end(); it++) {
+    if (!world_.city_id_exists(it->second)) {
+      std::cout << "Erasing city id for key " + it->first << std::endl;
+      city_map_.erase(it);
+    }
+  }
+
   EventManager::end_game_event =
     event_new(EventManager::base, (evutil_socket_t) -1, 0, end_game, (void *) this);
   return START_GAME + ": SUCCESS\n";
