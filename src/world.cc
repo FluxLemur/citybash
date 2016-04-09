@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "event_manager.h"
 #include "location.h"
+#include "utils.h"
 #include "world.h"
 
 World::World(int width) {
@@ -228,7 +229,7 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
   delete args;
 }
 
-std::string World::city_attack(city_id from_city_id, std::string to_city_name,
+std::string World::city_attack(city_id from_city_id, std::string to_city_str,
     int num_attacking) {
 
   std::map<city_id, City*>::iterator id_it = city_by_id_.find(from_city_id);
@@ -239,27 +240,43 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_name,
       std::to_string(all_from_soldiers);
   }
 
-  std::map<std::string, City*>::iterator name_it = city_names_.find(to_city_name);
+  std::map<std::string, City*>::iterator name_it = city_names_.find(to_city_str);
+  City *to_city;
   if (name_it == city_names_.end()) {
-    return "ATTACK FAILURE No city " + to_city_name + "\n";
+
+    // try to find the city by ID
+    if (Utils::is_number(to_city_str)) {
+      city_id to_city_id = city_id(Utils::safe_stoi(to_city_str));
+      id_it = city_by_id_.find(to_city_id);
+
+      if (id_it != city_by_id_.end()) {
+        to_city = id_it->second;
+      } else {
+        return "ATTACK FAILURE No city ID " + to_city_str + "\n";
+      }
+    } else {
+      return "ATTACK FAILURE No city " + to_city_str + "\n";
+    }
+  } else {
+    to_city = name_it->second;
   }
-  City &to_city = *name_it->second;
-  if (to_city.get_name().compare(from_city.get_name()) == 0) {
+
+  if (to_city->get_name().compare(from_city.get_name()) == 0) {
     return "ATTACK FAILURE Cannot attack your own city\n";
   }
-  int num_defending = to_city.get_soldiers();
+  int num_defending = to_city->get_soldiers();
 
   // remove soldiers from attacking city
   from_city.change_soldiers(-num_attacking);
 
   // schedule callback to do battle
   struct timeval tv;
-  tv.tv_sec = int(from_city.distance_to(&to_city));
+  tv.tv_sec = int(from_city.distance_to(to_city));
   tv.tv_usec = 0;
 
   struct battle_arg *battle_args = new battle_arg;
   battle_args->from_city = &from_city;
-  battle_args->to_city = &to_city;
+  battle_args->to_city = to_city;
   battle_args->num_attacking = num_attacking;
   battle_args->num_defending = num_defending;
 
@@ -269,6 +286,6 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_name,
 
   evtimer_add(battle_event, &tv);
 
-  return "ATTACK SUCCESS " + to_city_name + " "
+  return "ATTACK SUCCESS " + to_city->get_name() + " "
          + std::to_string(num_attacking) + "\n";
 }

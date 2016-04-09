@@ -13,7 +13,7 @@ class Utils {
     static bool is_number(const std::string &str);
     static std::string random_upper_alphanum(const int len);
 
-    /* Returns 0 if stoi fails */
+    /* Returns -1 if stoi fails */
     static int safe_stoi(const std::string &str);
 
     /* Return a random integer in the range [min, max) */

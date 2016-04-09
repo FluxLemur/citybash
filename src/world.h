@@ -75,7 +75,8 @@ class World {
      * EXCPET for train, if soldiers is -1, then will use maximum possible #
      */
     std::string city_train(city_id id, int soldiers);
-    std::string city_attack(city_id from_city, std::string to_city_name, int soldiers);
+    /* to_city can be either the name or the id of another city */
+    std::string city_attack(city_id from_city, std::string to_city, int soldiers);
 
     static void battle_result_callback(evutil_socket_t listener, short event, void *arg);
     static void battle_callback(evutil_socket_t listener, short event, void *arg);

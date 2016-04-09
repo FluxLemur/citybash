@@ -84,8 +84,7 @@ The valid player commands are (_not_ case sensitive):
 
 The server response is given below each respective player message.
   - `[player key] WORLD`
-    - `[city name] [city level] [distance to city]`
-    - `[city name] [city level] [distance to city]`
+    - `[city name] ([city id]) [city level] [distance to city]`
     - ... (newline delimited)
   - `[player key] CITY`
     - `LEVEL [current city level]`

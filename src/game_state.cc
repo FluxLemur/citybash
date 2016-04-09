@@ -195,7 +195,7 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
     case PLAYER_JOIN:
       if (split_req.size() != 3 || command.compare(Requests::JOIN) != 0) {
         if (id != City::INVALID_CITY) {
-          return "Please wait for the game to start.\n";
+          return "Please wait for the game to start\n";
         } else {
           return "INVALID SYNTAX\nVALID: [player key] JOIN [city_name_no_spaces]\n";
         }
@@ -250,14 +250,18 @@ std::string GameState::player_request(std::vector<std::string> split_req) {
 }
 
 std::string GameState::player_join(city_id id, std::string city_name) {
+  if (Utils::is_number(city_name)) {
+    return "ERROR: city name cannot be a number\n";
+  }
+
   switch (world_.add_city(id, city_name)) {
     case World::AddCityResponse::SUCCESS:
       std::cout << "** " << city_name << " has joined (id " << id << ") **" << std::endl;
       return "The city of " + city_name + " is welcomed warmly to CityBash!\n";
     case World::AddCityResponse::CITY_EXISTS:
-      return "ERROR: your player key already been used.\n";
+      return "ERROR: your player key already been used\n";
     case World::AddCityResponse::NAME_EXISTS:
-      return "ERROR: " + city_name + " is already taken.\n";
+      return "ERROR: " + city_name + " is already taken\n";
   }
 }
 
@@ -278,7 +282,7 @@ std::string GameState::player_upgrade(city_id id) {
 }
 
 std::string GameState::player_train(city_id id, int soldiers) {
-  if (soldiers == 0) {
+  if (soldiers <= 0) {
     return "TRAIN FAILURE. Cannot train 0 soldiers\n";
   }
   return world_.city_train(id, soldiers);
@@ -286,7 +290,7 @@ std::string GameState::player_train(city_id id, int soldiers) {
 
 std::string GameState::player_attack(city_id from_city,
     std::string to_city_name, int soldiers) {
-  if (soldiers == 0) {
+  if (soldiers <= 0) {
     return "ATTACK FAILURE Cannot attack with 0 soldiers\n";
   }
   return world_.city_attack(from_city, to_city_name, soldiers);
