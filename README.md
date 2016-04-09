@@ -40,7 +40,7 @@ The player controls _one_ city with assets and capabilities.
   - Players are awarded points based on city level, gold, and army size, and then ranked by point-count.
 
 ## Game Mechanics
-- Cities are placed at random on a 50x50 square world.
+- Cities are placed at random on a 20x20 square world.
 - Armies
   - See `simulations/battle_sim.py`
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers can be trained asynchronously.
@@ -92,8 +92,9 @@ The server response is given below each respective player message.
     - `GOLD [current gold amount]`
     - `INCOME [current gold income]`
     - `ARMY [# of soldiers in city]`
-    - `[list of notifcations]` of the form `* [#] sec ago: [contents]`, where `[contents]` can be any of...
-      - `[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained`
+    - `[list of notifcations]` of the form `* [#] sec ago: [contents]`, where `[contents]` is of the form:
+      - `[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained` These are for attacks on your city
+      - `Attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}` These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in `{}` is included
   - `[player key] COSTS`
     - `UPGRADE [gold to upgrade city] gold, [time to upgrade city] sec`
     - `TRAIN [gold to train soldier] gold, [time to train soldier] sec`
@@ -113,6 +114,9 @@ The server response is given below each respective player message.
     - `ATTACK FAILURE Cannot attack your own city`, or
     - `ATTACK FAILURE No city [city-name]`, or
     - `ATTACK FAILURE [# soldiers] > [# soldiers in city]`, or
+    - `ATTACK SUCCESS [city-name] [# soldiers]`
+
+After the round-trip time for the attack, a notification is added to your city:
     - `ATTACK {WIN, LOSE} [#]/[#] return with [#] gold, [city-name] remaining: [#]/[#]`
        if none of the previous cases apply. If 0 soldiers return, the part of
        the message including and after the `,` is ommitted.

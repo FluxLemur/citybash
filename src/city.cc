@@ -113,6 +113,15 @@ std::string City::display_all_neighbor_info() {
   return info_str;
 }
 
+float City::distance_to(City *other_city) {
+  std::map<City*, float>::iterator it = neighbors_.find(other_city);
+  if (it == neighbors_.end()) {
+    return 0.0;
+  }
+
+  return it->second;
+}
+
 std::string City::info() {
   std::string info = "";
   info += name_ + "\n";
@@ -138,16 +147,26 @@ std::string City::notification_to_string(std::chrono::steady_clock::time_point& 
   return "* " + std::to_string(int(diff.count())) + " sec ago: " + contents;
 }
 
-void City::add_attack_notification(std::string attacker_city, int n_attackers,
+void City::add_attack_notification(bool defending,
+    std::string attack_city, int n_attackers,
     int n_attackers_remaining, int gold_stolen, int n_defenders,
     int n_defenders_remaining) {
 
-  std::string contents = attacker_city + " attacked ";
+  std::string contents = "";
+  if (defending) {
+    contents += attack_city + " attacked ";
+  } else {
+    contents += "Attacked " + attack_city + " ";
+  }
+
   contents += std::to_string(n_attackers_remaining);
   contents += "/" + std::to_string(n_attackers) + " took ";
-  contents += std::to_string(gold_stolen) + " gold, ";
-  contents += std::to_string(n_defenders_remaining) + "/";
-  contents += std::to_string(n_defenders) + " defenders remained";
+  contents += std::to_string(gold_stolen) + " gold";
+
+  if (defending || n_attackers_remaining > 0) {
+    contents += ", " + std::to_string(n_defenders_remaining) + "/";
+    contents += std::to_string(n_defenders) + " defenders remained";
+  }
 
   notifications_.push_back(
       std::pair<std::chrono::steady_clock::time_point, std::string>
@@ -251,7 +270,7 @@ void City::train_callback(evutil_socket_t listener, short event, void *arg) {
   (void)(listener); // UNUSED
 
   struct train_arg *train_args = (struct train_arg *) arg;
-  train_args->city->add_soldiers(train_args->num_soldiers);
+  train_args->city->change_soldiers(train_args->num_soldiers);
   event_free(train_args->event_p);
   delete train_args;
 }
@@ -292,10 +311,8 @@ int City::get_soldiers() {
   return soldiers_;
 }
 
-void City::add_soldiers(int n) {
-  if (n >= 0) {
-    soldiers_ += n;
-  }
+void City::change_soldiers(int n) {
+  soldiers_ += n;
 }
 
 void City::set_soldiers(int n) {

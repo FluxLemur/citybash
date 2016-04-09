@@ -2,6 +2,7 @@
 #include <set>
 
 #include "battle.h"
+#include "event_manager.h"
 #include "location.h"
 #include "world.h"
 
@@ -150,12 +151,89 @@ std::string World::city_train(city_id id, int soldiers) {
   }
 }
 
-std::string World::city_attack(city_id from_city, std::string to_city_name,
+struct battle_arg {
+  City *from_city;
+  City *to_city;
+  int num_attacking;
+  int num_defending;
+  struct event *event_p;
+};
+
+struct battle_result_arg {
+  City *from_city;
+  City *to_city;
+  int num_attacking;
+  int attackers_remaining;
+  int gold_taken;
+  int num_defending;
+  int defenders_remaining;
+  struct event *event_p;
+};
+
+void World::battle_result_callback(evutil_socket_t listener, short event, void *arg) {
+  (void)(event);    // UNUSED
+  (void)(listener); // UNUSED
+
+  struct battle_result_arg *args = (struct battle_result_arg *) arg;
+  args->from_city->add_attack_notification(false, args->to_city->get_name(),
+      args->num_attacking, args->attackers_remaining, args->gold_taken,
+      args->num_defending, args->defenders_remaining);
+
+  args->from_city->change_gold(args->gold_taken, false);
+  args->from_city->change_soldiers(args->attackers_remaining);
+
+  event_free(args->event_p);
+  delete args;
+}
+
+void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
+  (void)(event);    // UNUSED
+  (void)(listener); // UNUSED
+
+  struct battle_arg *args = (struct battle_arg *) arg;
+
+  Battle b(args->num_attacking, args->num_defending, args->to_city->get_level());
+
+  int attacker_capacity = b.attackers_remaining() * 2;
+  int gold_taken = args->to_city->change_gold(-attacker_capacity, true);
+
+  args->to_city->set_soldiers(b.defenders_remaining());
+
+  args->to_city->add_attack_notification(true, args->from_city->get_name(),
+      args->num_attacking, b.attackers_remaining(), gold_taken,
+      args->num_defending, b.defenders_remaining());
+
+  // TODO: create event to notifier the attacker
+  struct timeval tv;
+  tv.tv_sec = int(args->to_city->distance_to(args->from_city));
+  tv.tv_usec = 0;
+
+  struct battle_result_arg *battle_result_args = new battle_result_arg;
+  battle_result_args->from_city = args->from_city;
+  battle_result_args->to_city = args->to_city;
+  battle_result_args->num_attacking = args->num_attacking;
+  battle_result_args->attackers_remaining = b.attackers_remaining();
+  battle_result_args->gold_taken = gold_taken;
+  battle_result_args->num_defending = args->num_defending;
+  battle_result_args->defenders_remaining = b.defenders_remaining();
+
+  struct event *battle_result_event;
+  battle_result_event = evtimer_new(EventManager::base, battle_result_callback,
+      (void *) battle_result_args);
+  battle_result_args->event_p = battle_result_event;
+
+  evtimer_add(battle_result_event, &tv);
+
+  event_free(args->event_p);
+  delete args;
+}
+
+std::string World::city_attack(city_id from_city_id, std::string to_city_name,
     int num_attacking) {
 
-  std::map<city_id, City*>::iterator id_it = city_by_id_.find(from_city);
-  City &attack_city = *id_it->second;
-  int all_from_soldiers = attack_city.get_soldiers();
+  std::map<city_id, City*>::iterator id_it = city_by_id_.find(from_city_id);
+  City &from_city = *id_it->second;
+  int all_from_soldiers = from_city.get_soldiers();
   if (num_attacking > all_from_soldiers) {
     return "ATTACK FAILURE " + std::to_string(num_attacking) + " > " +
       std::to_string(all_from_soldiers);
@@ -163,42 +241,34 @@ std::string World::city_attack(city_id from_city, std::string to_city_name,
 
   std::map<std::string, City*>::iterator name_it = city_names_.find(to_city_name);
   if (name_it == city_names_.end()) {
-    return "ATTACK INVALID No city " + to_city_name + "\n";
+    return "ATTACK FAILURE No city " + to_city_name + "\n";
   }
   City &to_city = *name_it->second;
-  int num_defending = to_city.get_soldiers();
-  if (to_city.get_name().compare(attack_city.get_name()) == 0) {
+  if (to_city.get_name().compare(from_city.get_name()) == 0) {
     return "ATTACK FAILURE Cannot attack your own city\n";
   }
+  int num_defending = to_city.get_soldiers();
 
-  Battle b(num_attacking, num_defending, to_city.get_level());
+  // remove soldiers from attacking city
+  from_city.change_soldiers(-num_attacking);
 
-  int attacker_capacity = b.attackers_remaining() * 2;
-  int gold_taken = to_city.change_gold(-attacker_capacity, true);
+  // schedule callback to do battle
+  struct timeval tv;
+  tv.tv_sec = int(from_city.distance_to(&to_city));
+  tv.tv_usec = 0;
 
-  attack_city.set_soldiers(all_from_soldiers - num_attacking + b.attackers_remaining());
-  attack_city.change_gold(gold_taken, false);
-  to_city.set_soldiers(b.defenders_remaining());
+  struct battle_arg *battle_args = new battle_arg;
+  battle_args->from_city = &from_city;
+  battle_args->to_city = &to_city;
+  battle_args->num_attacking = num_attacking;
+  battle_args->num_defending = num_defending;
 
-  std::string result = "ATTACK ";
-  if (b.attackers_win()) {
-    result += "WIN ";
-  } else {
-    result += "LOSE ";
-  }
+  struct event *battle_event;
+  battle_event = evtimer_new(EventManager::base, battle_callback, (void *) battle_args);
+  battle_args->event_p = battle_event;
 
-  result += std::to_string(b.attackers_remaining()) + "/";
-  result += std::to_string(num_attacking) + " return with ";
-  result += std::to_string(gold_taken) + " gold";
-  if (b.attackers_win()) {
-    result += ", " + to_city.get_name() + " remaining: ";
-    result += std::to_string(b.defenders_remaining()) + "/";
-    result += std::to_string(num_defending);
-  }
+  evtimer_add(battle_event, &tv);
 
-  to_city.add_attack_notification(attack_city.get_name(), num_attacking,
-      b.attackers_remaining(), gold_taken, num_defending, b.defenders_remaining());
-
-  result += "\n";
-  return result;
+  return "ATTACK SUCCESS " + to_city_name + " "
+         + std::to_string(num_attacking) + "\n";
 }

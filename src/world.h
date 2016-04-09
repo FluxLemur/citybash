@@ -28,7 +28,7 @@ class World {
     std::chrono::steady_clock::time_point start_time_;
 
   public:
-    World(int width=50);
+    World(int width=20);
     ~World();
     enum AddCityResponse {
       NAME_EXISTS,
@@ -76,6 +76,9 @@ class World {
      */
     std::string city_train(city_id id, int soldiers);
     std::string city_attack(city_id from_city, std::string to_city_name, int soldiers);
+
+    static void battle_result_callback(evutil_socket_t listener, short event, void *arg);
+    static void battle_callback(evutil_socket_t listener, short event, void *arg);
 };
 
 #endif // WORLD_H

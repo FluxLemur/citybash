@@ -63,12 +63,15 @@ class City {
     void set_start_time(std::chrono::steady_clock::time_point time);
     int get_gold();
     int get_level();
+    float distance_to(City *other_city);
 
     /* Notification related */
     void clear_notifications();
     std::string notification_to_string(std::chrono::steady_clock::time_point& time,
       std::string& contents);
-    void add_attack_notification(std::string attacker_city, int n_attackers,
+
+    void add_attack_notification(bool defending,
+        std::string attack_city, int n_attackers,
         int n_attackers_remaining, int gold_stolen, int n_defenders,
         int n_defender_remaining);
 
@@ -124,7 +127,7 @@ class City {
 
     int get_soldiers();
     void set_soldiers(int n);
-    void add_soldiers(int n);
+    void change_soldiers(int n);
 
     city_id get_id();
 };
