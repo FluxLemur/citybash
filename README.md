@@ -3,6 +3,14 @@ CityBash is simple [real time strategy
 game](https://en.wikipedia.org/wiki/Real-time_strategy) written as a server to
 facilitate the implementation and integration of AI players.
 
+1. [Overview](#overview)
+2. [Gameplay](#example2)
+3. [Game Mechanics](#game-mechanics)
+4. [Server Interface](#server-interface)
+5. [Running the Game Client](#running-the-game-client)
+6. [Running the Server](#running-the-server)
+7. [Implementation](#implementation)
+
 ## Overview
 The player controls _one_ city with assets and capabilities.
 
@@ -54,15 +62,6 @@ City Level | Income (gold/s) | Defense Multiplier | Upgrade Cost (gold) | Cache 
 4 | 5 | 1.5 | 810 | 135 |
 
 - Note that as soon as a city becomes level 5, the game is over.
-
-## Game Client
-The shell script `run_client.sh` provides a simple game client that a player
-can use to connect to the game server.
-
-NOTE: the script has a dependency on
-[`rlwrap`](https://github.com/hanslub42/rlwrap), a readline wrapper for user
-input. It can easily be installed with `apt-get`. If you prefer not to use it,
-edit `run_client.sh` and remove it.
 
 ## Server Interface
 The game runs as a server. The administrator first gives each player a unique
@@ -126,9 +125,26 @@ After the round-trip time for the attack, a notification is added to your city:
 When the game is over, the server rejects player commands, and the
 administrator can announce the results.
 
-## Special Features in Development
-- Barbarian cities
-- Different types of military units
+## Running the Game Client
+The shell script `run_client.sh` provides a simple game client that a player
+can use to connect to the game server.
+
+NOTE: the script has a dependency on
+[`rlwrap`](https://github.com/hanslub42/rlwrap), a readline wrapper for user
+input. It can easily be installed with `apt-get`. If you prefer not to use it,
+edit `run_client.sh` and remove it.
+
+## Running the Server
+In order to build and run the server locally, you must first ensure you have the
+dependencies:
+- [clang++](http://clang.llvm.org/)
+- [libevent2](http://libevent.org/)
+
+The following steps will get a server up and running:
+1. `make` creates the `citybash` binary - this is the server.
+2. `./citybash 123` starts the server with an admin key of `123` (you can use whatever you like)
+3. `cd clients/ && ./admin_client.sh` This will connect you to a the citybash server (which should running on localhost at port 12345). Send admin commands by prepending the admin key `123`.
+4. See `src/game_state.h` for valid admin commands.
 
 ## Implementation
 The engine is implemented in C++. We attempt to follow the
