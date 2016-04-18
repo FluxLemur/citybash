@@ -4,7 +4,7 @@ game](https://en.wikipedia.org/wiki/Real-time_strategy) written as a server to
 facilitate the implementation and integration of AI players.
 
 1. [Overview](#overview)
-2. [Gameplay](#example2)
+2. [Gameplay](#gameplay)
 3. [Game Mechanics](#game-mechanics)
 4. [Server Interface](#server-interface)
 5. [Running the Game Client](#running-the-game-client)
