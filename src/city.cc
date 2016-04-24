@@ -183,8 +183,12 @@ void City::add_attack_notification(bool defending,
   );
 }
 
-void City::clear_notifications() {
-  notifications_.clear();
+void City::clear_notifications(int keep) {
+  int to_remove = int(notifications_.size()) - keep;
+  if (to_remove <= 0) {
+    return;
+  }
+  notifications_.erase(notifications_.begin(), notifications_.begin() + to_remove);
 }
 
 int City::get_level() {

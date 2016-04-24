@@ -68,7 +68,8 @@ class City {
     void finish_upgrading();
 
     /* Notification related */
-    void clear_notifications();
+    /* Clear all but [keep] notifications */
+    void clear_notifications(int keep=3);
     std::string notification_to_string(std::chrono::steady_clock::time_point& time,
       std::string& contents);
 
