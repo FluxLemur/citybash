@@ -141,6 +141,7 @@ dependencies:
 - [libevent2](http://libevent.org/)
 
 The following steps will get a server up and running:
+
 1. `make` creates the `citybash` binary - this is the server.
 2. `./citybash 123` starts the server with an admin key of `123` (you can use whatever you like)
 3. `cd clients/ && ./admin_client.sh` This will connect you to a the citybash server (which should running on localhost at port 12345). Send admin commands by prepending the admin key `123`.
