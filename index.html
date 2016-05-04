@@ -365,11 +365,13 @@ dependencies:</p>
 <li><a href="http://libevent.org/">libevent2</a></li>
 </ul>
 
-<p>The following steps will get a server up and running:
-1. <code>make</code> creates the <code>citybash</code> binary - this is the server.
-2. <code>./citybash 123</code> starts the server with an admin key of <code>123</code> (you can use whatever you like)
-3. <code>cd clients/ &amp;&amp; ./admin_client.sh</code> This will connect you to a the citybash server (which should running on localhost at port 12345). Send admin commands by prepending the admin key <code>123</code>.
-4. See <code>src/game_state.h</code> for valid admin commands.</p>
+<p>The following steps will get a server up and running:</p>
+<ol>
+  <li> <code>make</code> creates the <code>citybash</code> binary - this is the server.</li>
+  <li> <code>./citybash 123</code> starts the server with an admin key of <code>123</code> (you can use whatever you like)</li>
+  <li> <code>cd clients/ &amp;&amp; ./admin_client.sh</code> This will connect you to a the citybash server (which should running on localhost at port 12345). Send admin commands by prepending the admin key <code>123</code>.</li>
+  <li> See <code>src/game_state.h</code> for valid admin commands.</li>
+</ol>
 
 <h2>
 <a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Implementation</h2>
