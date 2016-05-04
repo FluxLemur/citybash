@@ -1,4 +1,14 @@
-from clients import utils
+import socket
+
+def send_command(host, port, message):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect((host, port))
+        s.send(message)
+        return s.recv(2000)
+    except socket.error:
+        print 'ERROR: Cannot connect to {}:{}'.format(host, port)
+        quit()
 
 class LoginInfo:
     def __init__(self, host, port, key):

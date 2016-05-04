@@ -3,8 +3,7 @@ import socket
 import sys
 import time
 from vitchyr_ai import VitchyrAI
-from clients.utils import send_command
-from messenger import LoginInfo
+from messenger import LoginInfo, send_command
 
 if len(sys.argv) < 5:
     print "[host] [port] [key] [city_name_no_spaces]"
