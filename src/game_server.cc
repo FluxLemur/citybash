@@ -60,7 +60,7 @@ void GameServer::do_accept(evutil_socket_t listener, short event, void *arg) {
 
   // receive a message
   // TODO: consider making the reading, processing, and writing all events
-  int n = read(client, buffer, buffer_length);
+  long n = read(client, buffer, buffer_length);
   if (n < 0) {
     perror("read");
   } else if (n == int(buffer_length)) {
