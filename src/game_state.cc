@@ -127,6 +127,10 @@ std::string GameState::admin_start_game() {
 
 std::string GameState::admin_players() {
   std::map<std::string, city_id>::iterator it;
+  if (city_map_.empty()) {
+    return "no players have joined\n";
+  }
+
   std::string curr_players = "key        city_name\n";
   for (it = city_map_.begin(); it != city_map_.end(); it++) {
     curr_players += it->first + " ";
