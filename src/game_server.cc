@@ -36,7 +36,8 @@ std::string GameServer::handle_req(std::string request) {
   }
 
   if (split_req.size() < 2) {
-    return "INVALID: [" + Utils::trim(request) + "]\nVALID:\n  [player key] [command]\n";
+    return "INVALID: [" + Utils::trim(request) + "]\n" +
+      "VALID:\n  [player key] [command]\n";
   }
 
   if (split_req[0].compare(admin_key_) == 0) {
@@ -56,9 +57,9 @@ void GameServer::do_accept(evutil_socket_t listener, short event, void *arg) {
   char buffer[buffer_length];
 
   client_sock_size = sizeof(client_addr);
-  int client = accept(listener, (struct sockaddr *) (&client_addr), &client_sock_size);
+  int client = accept(listener, (struct sockaddr *) (&client_addr),
+      &client_sock_size);
 
-  // receive a message
   // TODO: consider making the reading, processing, and writing all events
   long n = read(client, buffer, buffer_length);
   if (n < 0) {
@@ -88,7 +89,15 @@ void GameServer::run() {
 
   int enable = 1;
   setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable));
-  // TODO: in order to enforce timeouts, use SO_SNDTIMEO, SO_RCVTIMEO
+
+  // Send and Recv timeouts on the listener socket
+  struct timeval tv;
+  tv.tv_sec = 0;
+  tv.tv_usec = 50 * 1000; // 50 ms
+  setsockopt(listener, SOL_SOCKET, SO_SNDTIMEO, (void *) &tv,
+      sizeof(struct timeval));
+  setsockopt(listener, SOL_SOCKET, SO_RCVTIMEO, (void *) &tv,
+      sizeof(struct timeval));
 
   struct sockaddr_in sin;
   sin.sin_family = AF_INET;
@@ -109,7 +118,8 @@ void GameServer::run() {
   std::cout << "CityBash server is running at port " << PORT << std::endl;
 
   struct event *listener_event;
-  listener_event = event_new(base, listener, EV_READ|EV_PERSIST, do_accept, (void*)this);
+  listener_event = event_new(base, listener, EV_READ|EV_PERSIST, do_accept,
+      (void*)this);
 
   event_add(listener_event, NULL);
   event_base_dispatch(base);
