@@ -15,7 +15,7 @@ def send_command(host, port, message):
         print 'ERROR: Cannot connect to {}:{}'.format(host, port)
         quit()
 
-def run(host, port, key=None, shortstat=False):
+def run(host, port, key=None):
     player_key = ''
 
     while True:
@@ -31,10 +31,6 @@ def run(host, port, key=None, shortstat=False):
             msg = key + ' ' + msg
 
         print send_command(host, port, msg)
-        if key is not None and shortstat and 'CITY' not in msg.upper():
-            resp = send_command(host, port, key + ' SHORTCITY\n')
-            if not resp.startswith('ERROR') and not resp.startswith('GAME OVER'):
-                print resp
 
 def send_hello(host, port):
     print send_command(host, port, 'CLIENT_HELLO %s\n' % socket.gethostname())
