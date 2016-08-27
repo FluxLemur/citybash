@@ -97,9 +97,7 @@ void City::add_neighbor(City* neighbor, float distance) {
 std::string City::display_all_neighbor_info() {
   std::string info_str = "";
 
-  std::map<City*, float>::iterator it;
-
-  for (it = neighbors_.begin(); it != neighbors_.end(); it++) {
+  for (auto it = neighbors_.begin(); it != neighbors_.end(); it++) {
     if (it->first) {
       City& other_city = *(it->first);
       float distance_to = it->second;
@@ -116,7 +114,7 @@ std::string City::display_all_neighbor_info() {
 }
 
 float City::distance_to(City *other_city) {
-  std::map<City*, float>::iterator it = neighbors_.find(other_city);
+  auto it = neighbors_.find(other_city);
   if (it == neighbors_.end()) {
     return 0.0;
   }
@@ -137,9 +135,7 @@ std::string City::info(bool less) {
   info += "  ARMY   " + std::to_string(soldiers_) + "\n";
 
   if (!less) {
-    std::vector<std::pair<std::chrono::steady_clock::time_point,
-                          std::string>>::reverse_iterator it;
-    for (it = notifications_.rbegin(); it != notifications_.rend(); it++) {
+    for (auto it = notifications_.rbegin(); it != notifications_.rend(); it++) {
       info += "  " + notification_to_string(it->first, it->second);
       info += "\n";
     }

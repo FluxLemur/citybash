@@ -12,21 +12,18 @@ World::World(int width) {
 }
 
 World::~World() {
-  std::map<city_id, City*>::iterator it;
-  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+  for (auto it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
     delete it->second;
   }
 }
 
 World::AddCityResponse World::add_city(city_id id, std::string name) {
-  std::map<std::string, City*>::iterator names_it;
-  names_it = city_names_.find(name);
+  auto names_it = city_names_.find(name);
   if (names_it != city_names_.end()) { // name already exists
     return AddCityResponse::NAME_EXISTS;
   }
 
-  std::map<city_id, City*>::iterator it;
-  it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   if (it != city_by_id_.end()) { // city already exists
     return AddCityResponse::CITY_EXISTS;
   }
@@ -38,8 +35,7 @@ World::AddCityResponse World::add_city(city_id id, std::string name) {
 }
 
 std::string World::name_of(city_id id) {
-  std::map<city_id, City*>::iterator it;
-  it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   if (it == city_by_id_.end()) {
     return "Error: city not yet created";
   } else {
@@ -52,15 +48,13 @@ void World::create() {
   generate_pairwise_distances();
   start_time_ = std::chrono::steady_clock::now();
 
-  std::map<city_id, City*>::iterator it;
-  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+  for (auto it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
     it->second->set_start_time(start_time_);
   }
 }
 
 void World::randomly_place_cities() {
-  std::map<city_id, City*>::iterator it;
-  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+  for (auto it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
     Location* new_loc;
 
     do {
@@ -76,7 +70,7 @@ void World::randomly_place_cities() {
 }
 
 bool World::city_id_exists(city_id id) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   return it != city_by_id_.end();
 }
 
@@ -99,7 +93,7 @@ void World::generate_pairwise_distances() {
 }
 
 std::string World::other_cities_info(city_id id) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   if (it == city_by_id_.end() || it->second == nullptr) {
     return "ERROR: no city with id " + std::to_string(id) + "\n";
   }
@@ -108,7 +102,7 @@ std::string World::other_cities_info(city_id id) {
 }
 
 std::string World::city_loc(city_id id) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   if (it == city_by_id_.end() || it->second == nullptr) {
     return "ERROR: no city with id " + std::to_string(id) + "\n";
   }
@@ -119,15 +113,14 @@ std::string World::city_loc(city_id id) {
 
 std::string World::all_city_info() {
   std::string info_str;
-  std::map<city_id, City*>::iterator it;
-  for (it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
+  for (auto it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
     info_str += it->second->info(true) + "\n";
   }
   return info_str;
 }
 
 std::string World::city_info(city_id id, bool less) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   City &city = *it->second;
 
   std::string info = city.info(less);
@@ -136,19 +129,19 @@ std::string World::city_info(city_id id, bool less) {
 }
 
 std::string World::city_costs(city_id id) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   City &city = *it->second;
   return city.costs();
 }
 
 std::string World::city_upgrade(city_id id) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   City &city = *it->second;
   return city.upgrade();
 }
 
 std::string World::city_train(city_id id, int soldiers) {
-  std::map<city_id, City*>::iterator it = city_by_id_.find(id);
+  auto it = city_by_id_.find(id);
   City &city = *it->second;
   if (soldiers == -1) {
     return city.train_max();
@@ -237,7 +230,7 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
 std::string World::city_attack(city_id from_city_id, std::string to_city_str,
     int num_attacking) {
 
-  std::map<city_id, City*>::iterator id_it = city_by_id_.find(from_city_id);
+  auto id_it = city_by_id_.find(from_city_id);
   City &from_city = *id_it->second;
   int all_from_soldiers = from_city.get_soldiers();
   if (num_attacking > all_from_soldiers) {
@@ -245,7 +238,7 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_str,
       std::to_string(all_from_soldiers);
   }
 
-  std::map<std::string, City*>::iterator name_it = city_names_.find(to_city_str);
+  auto name_it = city_names_.find(to_city_str);
   City *to_city;
   if (name_it == city_names_.end()) {
 
@@ -291,6 +284,6 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_str,
 
   evtimer_add(battle_event, &tv);
 
-  return "ATTACK SUCCESS " + to_city->get_name() + " "
+  return "ATTACK SENT TO " + to_city->get_name() + " "
          + std::to_string(num_attacking) + "\n";
 }

@@ -3,7 +3,7 @@ import socket
 def send(socket, message):
     # In Python 3, must convert message to bytes explicitly.
     # In Python 2, this does not affect the message.
-    socket.send(message.encode('utf-8'))
+    socket.sendall(message.encode('utf-8'))
 
 def send_command(host, port, message):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

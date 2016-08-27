@@ -112,8 +112,7 @@ std::string GameState::admin_start_game() {
   world_.create();
   state_ = PlayState::PLAYING;
 
-  std::map<std::string, city_id>::iterator it;
-  for (it = city_map_.begin(); it != city_map_.end(); it++) {
+  for (auto it = city_map_.begin(); it != city_map_.end(); it++) {
     if (!world_.city_id_exists(it->second)) {
       std::cout << "Erasing city id for key " + it->first << std::endl;
       city_map_.erase(it);
@@ -126,13 +125,12 @@ std::string GameState::admin_start_game() {
 }
 
 std::string GameState::admin_players() {
-  std::map<std::string, city_id>::iterator it;
   if (city_map_.empty()) {
     return "no players have joined\n";
   }
 
   std::string curr_players = "key        city_name\n";
-  for (it = city_map_.begin(); it != city_map_.end(); it++) {
+  for (auto it = city_map_.begin(); it != city_map_.end(); it++) {
     curr_players += it->first + " ";
     curr_players += world_.name_of(it->second) + "\n";
   }
@@ -151,9 +149,8 @@ std::string GameState::admin_info() {
 }
 
 std::string GameState::admin_map() {
-  std::map<std::string, city_id>::iterator it;
   std::string map_str = "";
-  for (it = city_map_.begin(); it != city_map_.end(); it++) {
+  for (auto it = city_map_.begin(); it != city_map_.end(); it++) {
     map_str += it->first + " " + world_.city_loc(it->second) + "\n";
   }
   return map_str;
@@ -185,8 +182,7 @@ std::string GameState::PLAYER_VALID_COMMANDS =
     "  [player key] ATTACK [city_name] [# soldiers]\n";
 
 city_id GameState::city_id_for_key(std::string player_key) {
-  std::map<std::string, city_id>::iterator city_it;
-  city_it = city_map_.find(player_key);
+  auto city_it = city_map_.find(player_key);
 
   if (city_it == city_map_.end()) {
     return City::INVALID_CITY;
