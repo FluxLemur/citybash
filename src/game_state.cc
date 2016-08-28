@@ -268,29 +268,32 @@ std::string GameState::player_join(city_id id, std::string city_name) {
 
   switch (world_.add_city(id, city_name)) {
     case World::AddCityResponse::SUCCESS:
-      std::cout << "** " << city_name << " has joined (id " << id << ") **" << std::endl;
+      std::cout << "** " << city_name << " has joined (id " << id << ") **"
+                << std::endl;
       return "The city of " + city_name + " is welcomed warmly to CityBash!\n";
+
     case World::AddCityResponse::CITY_EXISTS:
       return "ERROR: your player key already been used\n";
+
     case World::AddCityResponse::NAME_EXISTS:
       return "ERROR: " + city_name + " is already taken\n";
   }
 }
 
 std::string GameState::player_world(city_id id) {
-  return world_.other_cities_info(id);
+  return "WORLD\n" + world_.other_cities_info(id);
 }
 
 std::string GameState::player_city(city_id id) {
-  return world_.city_info(id);
+  return "CITY " + world_.city_info(id);
 }
 
 std::string GameState::player_shortcity(city_id id) {
-  return world_.city_info(id, true);
+  return "SHORTCITY " + world_.city_info(id, true);
 }
 
 std::string GameState::player_costs(city_id id) {
-  return world_.city_costs(id);
+  return "COSTS\n" + world_.city_costs(id);
 }
 
 std::string GameState::player_upgrade(city_id id) {

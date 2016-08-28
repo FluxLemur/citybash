@@ -86,9 +86,11 @@ The valid player commands are (_not_ case sensitive):
 
 The server response is given below each respective player message.
   - `[player key] WORLD`
+    - `WORLD`
     - `[city name] ([city id]) [city level] [distance to city]`
     - ... (newline delimited)
   - `[player key] CITY`
+    - `CITY [city name]`
     - `LEVEL [current city level]`
     - `GOLD [current gold amount]`
     - `INCOME [current gold income]`
@@ -97,8 +99,9 @@ The server response is given below each respective player message.
       - `[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained` These are for attacks on your city
       - `Attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}` These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in `{}` is included
   - `[player key] SHORTCITY`
-    - `LEVEL [#], GOLD [#], INCOME [#], ARMY [#]`
+    - `SHORTCITY [name] LEVEL [#], GOLD [#], INCOME [#], ARMY [#]`
   - `[player key] COSTS`
+    - `COSTS`
     - `UPGRADE [gold to upgrade city] gold, [time to upgrade city] sec`
     - `TRAIN [gold to train soldier] gold, [time to train soldier] sec`
   - `[player key] UPGRADE`

@@ -16,6 +16,6 @@ const std::string Responses::INVALID_TRAIN =
                   "VALID: [player key] TRAIN [# soldiers]\n";
 const std::string Responses::INVALID_ATTACK =
                   "INVALID ATTACK. "
-                  "VALID: [player key] ATTACK [other city name/id]"
+                  "VALID: [player key] ATTACK [other city name/id] "
                   "[# soldiers]\n";
 const std::string Responses::NOT_IMPLEMENTED = "NOT IMPLEMENTED\n";
