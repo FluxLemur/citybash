@@ -1,14 +1,5 @@
-import socket
-
-def send_command(host, port, message):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.connect((host, port))
-        s.send(message)
-        return s.recv(2000)
-    except socket.error:
-        print 'ERROR: Cannot connect to {}:{}'.format(host, port)
-        quit()
+import sys; sys.path.append('../clients/utils.py')
+import utils
 
 class LoginInfo:
     def __init__(self, host, port, key):
@@ -38,7 +29,7 @@ class Messenger:
     def max_train(self):
         return Message(self.login_info, "t max")
 
-    def attack(self, city):
+    def attack(self, city, number):
         return Message(self.login_info, "a {0} {1}".format(city, number))
 
 class Message:
