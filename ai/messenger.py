@@ -1,4 +1,4 @@
-import sys; sys.path.append('../clients/utils.py')
+import sys; sys.path.append('../clients/')
 import utils
 
 class LoginInfo:
