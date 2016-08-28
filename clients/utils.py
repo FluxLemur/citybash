@@ -14,10 +14,10 @@ def send_command(host, port, message):
     except socket.error:
         print 'ERROR: Cannot connect to {}:{}'.format(host, port)
         quit()
+    except:
+        raise
 
 def run(host, port, key=None):
-    player_key = ''
-
     while True:
         try:
             msg = raw_input() +'\n'
