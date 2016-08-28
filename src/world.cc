@@ -55,7 +55,7 @@ void World::create() {
 
 void World::randomly_place_cities() {
   for (auto it = city_by_id_.begin(); it != city_by_id_.end(); it++) {
-    Location* new_loc;
+    Location* new_loc; // TODO: memory leak
 
     do {
       new_loc = Location::random_location(width_);
