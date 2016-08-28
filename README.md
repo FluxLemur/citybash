@@ -97,7 +97,7 @@ The server response is given below each respective player message.
     - `ARMY [# of soldiers in city]`
     - `[list of notifcations]` of the form `* [#] sec ago: [contents]`, where `[contents]` is of the form:
       - `[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained` These are for attacks on your city
-      - `Attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}` These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in `{}` is included
+      - `attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}` These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in `{}` is included
   - `[player key] SHORTCITY`
     - `SHORTCITY [name] LEVEL [#], GOLD [#], INCOME [#], ARMY [#]`
   - `[player key] COSTS`

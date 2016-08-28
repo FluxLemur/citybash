@@ -161,7 +161,7 @@ void City::add_attack_notification(bool defending,
   if (defending) {
     contents += attack_city + " attacked ";
   } else {
-    contents += "Attacked " + attack_city + " ";
+    contents += "attacked " + attack_city + " ";
   }
 
   contents += std::to_string(n_attackers_remaining);
