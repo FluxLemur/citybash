@@ -46,12 +46,10 @@ The player controls _one_ city with some assets and capabilities.
   - The game stops when either:
     1. A player upgrades to a level 5 city
     2. 10 minutes have passed
-  <!-- - Players are awarded points based on city level, gold, and army size, and then ranked by point-count. -->
 
 ## Game Mechanics
 - Cities are placed at random on a 20x20 square world.
 - Armies
-  <!-- - See `simulations/battle_sim.py` -->
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers are trained asynchronously.
   - Armies move 1 distance unit/sec
 
