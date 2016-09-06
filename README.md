@@ -1,7 +1,7 @@
 # CityBash
 CityBash is simple [real time strategy
-game](https://en.wikipedia.org/wiki/Real-time_strategy) written as a server to
-facilitate the implementation and integration of AI players.
+game](https://en.wikipedia.org/wiki/Real-time_strategy) implemented as a stand-alone server to
+facilitate integration of AI players.
 
 1. [Overview](#overview)
 2. [Gameplay](#gameplay)
@@ -12,7 +12,8 @@ facilitate the implementation and integration of AI players.
 7. [Implementation](#implementation)
 
 ## Overview
-The player controls _one_ city with some assets and capabilities.
+CityBash has no front end. The player sends commands to a game server running on a certain host
+and port, and is in control of _one_ city with some assets and capabilities.
 
 - Assets
   - Gold
