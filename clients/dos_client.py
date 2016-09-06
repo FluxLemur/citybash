@@ -19,7 +19,8 @@ while True:
     try:
         msg = 'asdfngnqwrgwrkljadsnfiwngiwqeu023nksndjjjjjjjjjsdlfnsdjfnasdkjfnaskdjnfakjsdnfakjsdnfakjsdnfkajsdnfkasjdnfkjasndfkjansdkfjansdkjfnaskdjnfakjsdnfaskjdnf'
         resp = send_command(args.host, args.port, msg)
-        count += 1
+        if resp:
+            count += 1
 
         if time.time() - start > duration:
             break

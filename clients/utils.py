@@ -13,7 +13,6 @@ def send_command(host, port, message):
         return s.recv(2000)
     except socket.error:
         print 'ERROR: Cannot connect to {}:{}'.format(host, port)
-        quit()
     except:
         raise
 

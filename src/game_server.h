@@ -19,8 +19,26 @@ class GameServer {
   private:
     GameState game_state_;
     static std::string WELCOME_MESSAGE_;
-    static const int BACKLOG_ = 10;
+    static const int BACKLOG_ = 15;
     std::string admin_key_;
+
+    // http://stackoverflow.com/questions/4157687/using-char-as-a-key-in-stdmap
+    struct CompareSockAddr {
+      bool operator()(struct sockaddr sa1, struct sockaddr sa2);
+    };
+    enum RateLimitResponse {
+      PASS, // normal case
+      WARN, // first time client exceeds rate limit
+      DROP, // during cooldown period after WARN
+    };
+    static const struct timeval RL_TOKEN_PERIOD;
+
+    static const int RL_MAX_TOKENS = 10;
+    static const int RL_COOLDOWN = 10;
+    std::map<struct sockaddr, int, CompareSockAddr> client_tokens;
+
+    static void rl_add_token(evutil_socket_t fd, short what, void *arg);
+    RateLimitResponse rate_limit_client(struct sockaddr client_addr);
 
   public:
     GameServer(std::string admin_key);

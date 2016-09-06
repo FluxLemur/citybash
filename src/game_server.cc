@@ -18,6 +18,8 @@
 
 
 std::string GameServer::WELCOME_MESSAGE_ = "Welcome to CityBash!\n";
+const struct timeval GameServer::RL_TOKEN_PERIOD = {0, 100 * 1000}; // 100 ms
+void print_sockaddr(struct sockaddr sa);
 
 GameServer::GameServer(std::string admin_key) {
   admin_key_ = admin_key;
@@ -47,18 +49,86 @@ std::string GameServer::handle_req(std::string request) {
   }
 }
 
+bool GameServer::CompareSockAddr::operator()(struct sockaddr sa1,
+                                             struct sockaddr sa2) {
+  for (int i = 2; i < 6; ++i) { // TODO: bytes 2,3,4,5 are the ip??
+    if (sa1.sa_data[i] < sa2.sa_data[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void print_sockaddr(struct sockaddr sa) {
+  for (int i = 2; i < 6; i++) {
+    std::cout << (int) sa.sa_data[i];
+    if (i < 5) {
+      std::cout << ".";
+    }
+  }
+}
+
+GameServer::RateLimitResponse
+GameServer::rate_limit_client(struct sockaddr client_addr) {
+  auto search = client_tokens.find(client_addr);
+
+  // localhost is not rate-limited
+  if (client_addr.sa_data[2] == 127 && client_addr.sa_data[3] == 0 &&
+      client_addr.sa_data[4] == 0 && client_addr.sa_data[5] == 1) {
+    return PASS;
+  }
+
+  if (search == client_tokens.end()) {
+    print_sockaddr(client_addr);
+    std::cout << " NEW client" << std::endl;
+    client_tokens.insert(std::make_pair(client_addr, RL_MAX_TOKENS - 1));
+    return PASS;
+
+  } else {
+    if (search->second == 0) {
+      std::cout << "WARN client " << search->second << std::endl;
+      search->second -= RL_COOLDOWN;
+      return WARN;
+    } else if (search->second < 0) {
+      return DROP;
+    } else {
+      search->second -= 1;
+      return PASS;
+    }
+  }
+}
+
+void GameServer::rl_add_token(evutil_socket_t fd, short what, void *arg) {
+  (void)(fd);
+  (void)(what);
+  GameServer *gs = (GameServer *) arg;
+
+  for (auto client_token = gs->client_tokens.begin();
+      client_token != gs->client_tokens.end(); ++client_token) {
+
+    if (client_token->second < RL_MAX_TOKENS) {
+      client_token->second += 1;
+    }
+  }
+}
+
 static const unsigned int buffer_length = 100;
 void GameServer::do_accept(evutil_socket_t listener, short event, void *arg) {
   (void)(event); // UNUSED
 
   GameServer *gs = (GameServer *) arg;
-  int client_addr;
+  struct sockaddr client_addr;
   socklen_t client_sock_size;
   char buffer[buffer_length];
 
   client_sock_size = sizeof(client_addr);
-  int client = accept(listener, (struct sockaddr *) (&client_addr),
+  int client = accept(listener, &client_addr,
       &client_sock_size);
+
+  if (gs->rate_limit_client(client_addr) != PASS) {
+    close(client);
+    return;
+  }
 
   // TODO: consider making the reading, processing, and writing all events
   long n = read(client, buffer, buffer_length);
@@ -93,7 +163,7 @@ void GameServer::run() {
   // Send and Recv timeouts on the listener socket
   struct timeval tv;
   tv.tv_sec = 0;
-  tv.tv_usec = 50 * 1000; // 50 ms
+  tv.tv_usec = 10 * 1000; // 10 ms
   setsockopt(listener, SOL_SOCKET, SO_SNDTIMEO, (void *) &tv,
       sizeof(struct timeval));
   setsockopt(listener, SOL_SOCKET, SO_RCVTIMEO, (void *) &tv,
@@ -119,8 +189,12 @@ void GameServer::run() {
 
   struct event *listener_event;
   listener_event = event_new(base, listener, EV_READ|EV_PERSIST, do_accept,
-      (void*)this);
+      (void*) this);
+
+  struct event *rl_token_event = event_new(base, -1, EV_PERSIST, rl_add_token,
+      (void*) this);
 
   event_add(listener_event, NULL);
+  evtimer_add(rl_token_event, &RL_TOKEN_PERIOD);
   event_base_dispatch(base);
 }
