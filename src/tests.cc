@@ -43,7 +43,7 @@ void test_string_processing() {
 }
 
 void distance_approx(Location l1, Location l2, float target) {
-  assert(Location::distance_between(l1, l2) - target < 0.00001);
+  assert(Location::distance_between(l1, l2) - target < (float) 0.00001);
 }
 
 void test_locations() {
@@ -65,7 +65,7 @@ void test_battles() {
   Battle* b = new Battle(1, 1, 1);
   assert(!b->attackers_win());
   assert(b->attackers_remaining() == 0);
-  assert(b->defenders_remaining() == 0);
+  assert(b->defenders_remaining() == 1);
   delete b;
 
   b = new Battle(12, 10, 1);
