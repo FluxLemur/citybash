@@ -2,22 +2,13 @@
 #include "city.h"
 
 Battle::Battle(int num_attackers, int num_defenders, int defender_level) {
-  double multiplier = City::defense_multiplier[defender_level - 1];
-  int defender_power = int(num_defenders * multiplier);
+  float multiplier = (float) City::defense_multiplier[defender_level - 1];
+  float defender_power = num_defenders * multiplier;
+  float total_power = num_attackers + defender_power;
 
-  if (num_attackers > defender_power) {
-    attackers_win_ = true;
-    attackers_remaining_ = num_attackers - defender_power;
-    defenders_remaining_ = 0;
-  } else {
-    attackers_win_ = false;
-    attackers_remaining_ = 0;
-    defenders_remaining_ = num_defenders - int(double(num_attackers) / multiplier);
-  }
-}
 
-bool Battle::attackers_win() {
-  return attackers_win_;
+  attackers_remaining_ = int(num_attackers * (num_attackers / total_power));
+  defenders_remaining_ = int(num_defenders * (defender_power / total_power));
 }
 
 int Battle::attackers_remaining() {

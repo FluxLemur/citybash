@@ -62,16 +62,50 @@ void test_locations() {
 }
 
 void test_battles() {
-  Battle* b = new Battle(1, 1, 1);
-  assert(!b->attackers_win());
-  assert(b->attackers_remaining() == 0);
-  assert(b->defenders_remaining() == 1);
+  Battle* b = new Battle(1, 0, 1);
+  assert(b->attackers_remaining() == 1);
+  assert(b->defenders_remaining() == 0);
   delete b;
 
-  b = new Battle(12, 10, 1);
-  assert(!b->attackers_win());
+  b = new Battle(1, 1, 1);
   assert(b->attackers_remaining() == 0);
   assert(b->defenders_remaining() == 0);
+  delete b;
+
+  b = new Battle(2, 5, 1);
+  assert(b->attackers_remaining() == 0);
+  assert(b->defenders_remaining() == 3);
+  delete b;
+
+  b = new Battle(5, 5, 1);
+  assert(b->attackers_remaining() == 2);
+  assert(b->defenders_remaining() == 2);
+  delete b;
+
+  b = new Battle(10, 10, 1);
+  assert(b->attackers_remaining() == 4);
+  assert(b->defenders_remaining() == 5);
+  delete b;
+
+  b = new Battle(3, 1, 1);
+  assert(b->attackers_remaining() == 2);
+  assert(b->defenders_remaining() == 0);
+  delete b;
+
+  b = new Battle(50, 50, 4);
+  assert(b->attackers_remaining() == 20);
+  assert(b->defenders_remaining() == 30);
+  delete b;
+
+  b = new Battle(50, 50, 3);
+  assert(b->attackers_remaining() == 20);
+  assert(b->defenders_remaining() == 29);
+  delete b;
+
+  b = new Battle(50, 50, 2);
+  assert(b->attackers_remaining() == 21);
+  assert(b->defenders_remaining() == 28);
+  delete b;
 }
 
 int main() {

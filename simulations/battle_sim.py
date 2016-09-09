@@ -87,7 +87,7 @@ about the number defenders.''',
 examples.append((
 '''In the case of ties, defenders have a slight advantage due to the defense
 multiplier.''',
-    Battle(attackers=5, defenders=5, level=1, gold=10)
+    Battle(attackers=10, defenders=10, level=1, gold=10)
 ))
 
 examples.append((
@@ -104,7 +104,7 @@ examples.append((
 
 examples.append((
 '''At high city levels, the cache size is substantial and the defense
-multiplier is greater.''', # TODO: this battle outcome seems unfair
+multiplier is greater.''',
     Battle(50, 50, 4, 130)
 ))
 
