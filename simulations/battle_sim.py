@@ -33,7 +33,7 @@ class Battle:
 
         attackers_remaining = int(attacker_power *
                                   (attacker_power / total_power))
-        defenders_remaining = int(defender_power *
+        defenders_remaining = int(defenders *
                                   (defender_power / total_power))
 
         gold_avail = max(0, gold - cache_size[level - 1])
