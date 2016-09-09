@@ -1,7 +1,7 @@
 # CityBash
 CityBash is simple [real time strategy
-game](https://en.wikipedia.org/wiki/Real-time_strategy) implemented as a stand-alone server to
-facilitate integration of AI players.
+game](https://en.wikipedia.org/wiki/Real-time_strategy) implemented as a
+stand-alone server to facilitate integration of AI players.
 
 1. [Overview](#overview)
 2. [Gameplay](#gameplay)
@@ -12,8 +12,9 @@ facilitate integration of AI players.
 7. [Implementation](#implementation)
 
 ## Overview
-CityBash has no front end. The player sends commands to a game server running on a certain host
-and port, and is in control of _one_ city with some assets and capabilities.
+CityBash has no front end. The player sends commands to a game server running
+on a certain host and port, and is in control of _one_ city with some assets
+and capabilities.
 
 - Assets
   - Gold
@@ -29,9 +30,9 @@ and port, and is in control of _one_ city with some assets and capabilities.
   - Among the cities that belong to players, the world _may_ also contains some randomly placed NPC cities.
 - Gold Usage
   - Each city has a base income of gold at the start of the game.
-  - A player can spend gold to increase their:
-    * City level
-    * Military power
+  - A player can spend gold to:
+    * Increase city level
+    * Train soldiers
 - City Level
   - The player's city starts at level 1.
   - Higher level cities yield higher gold income, and have a larger defense multiplier.
@@ -43,10 +44,11 @@ and port, and is in control of _one_ city with some assets and capabilities.
     1. Nothing happens for some time `T_ab`, proportional to the distance between cities A and B. The army is moving.
     2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them. Some of B's gold is safely hidden in it's _cache_ (gold is automatically stored in a city's cache).
     3. After `T_ab` more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
+  - Run `simulations/battle_sim.py` for some examples.
 - Ending Conditions
   - The game stops when either:
     1. A player upgrades to a level 5 city
-    2. 10 minutes have passed
+    2. The admin terminates after some amount of time (say, 10 minutes)
 
 ## Game Mechanics
 - Cities are placed at random on a 20x20 square world.
@@ -94,7 +96,7 @@ The server response is given below each respective player message.
     - `GOLD [current gold amount]`
     - `INCOME [current gold income]`
     - `ARMY [# of soldiers in city]`
-    - `[list of notifcations]` of the form `* [#] sec ago: [contents]`, where `[contents]` is of the form:
+    - `[list of notifcations]` with each item of the form `* [#] sec ago: [contents]`. The `[contents]` can be one of two options:
       - `[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained` These are for attacks on your city
       - `attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}` These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in `{}` is included
   - `[player key] SHORTCITY`
@@ -119,12 +121,12 @@ The server response is given below each respective player message.
     - `ATTACK FAILURE Cannot attack your own city`, or
     - `ATTACK FAILURE No city [city-name]`, or
     - `ATTACK FAILURE [# soldiers] > [# soldiers in city]`, or
-    - `ATTACK SUCCESS [city-name] [# soldiers]`
+    - `ATTACK SENT TO [city-name] [# soldiers]`
 
-After the round-trip time for the attack, a notification is added to your city:
-    - `ATTACK {WIN, LOSE} [#]/[#] return with [#] gold, [city-name] remaining: [#]/[#]`
-       if none of the previous cases apply. If 0 soldiers return, the part of
-       the message including and after the `,` is ommitted.
+After the round-trip time for the attack, a notification will appear in your
+`CITY` response (as above). If you have many new notifications, they will all
+be displayed. However, if there are no new notifications, only the 3 most recent
+notifications will be displayed.
 
 When the game is over, the server rejects player commands, and the
 administrator can announce the results.
@@ -153,7 +155,7 @@ The following steps will get a server up and running:
 and the server will respond with the valid commands).
 
 ## Implementation
-The engine is implemented in C++. We attempt to follow the
+The engine is implemented in C++. I attempt to follow the
 [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 
 Simulations of the game mechanics are in Python (see `simulations/`). A guiding
