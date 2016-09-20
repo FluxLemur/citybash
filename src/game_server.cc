@@ -49,8 +49,8 @@ std::string GameServer::handle_req(std::string request) {
   }
 }
 
-bool GameServer::CompareSockAddr::operator()(struct sockaddr sa1,
-                                             struct sockaddr sa2) {
+bool GameServer::CompareSockAddr::operator() (struct sockaddr sa1,
+                                              struct sockaddr sa2) const {
   for (int i = 2; i < 6; ++i) { // TODO: bytes 2,3,4,5 are the ip??
     if (sa1.sa_data[i] < sa2.sa_data[i]) {
       return true;

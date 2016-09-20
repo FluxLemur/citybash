@@ -24,7 +24,7 @@ class GameServer {
 
     // http://stackoverflow.com/questions/4157687/using-char-as-a-key-in-stdmap
     struct CompareSockAddr {
-      bool operator()(struct sockaddr sa1, struct sockaddr sa2);
+      bool operator()(struct sockaddr sa1, struct sockaddr sa2) const;
     };
     enum RateLimitResponse {
       PASS, // normal case
