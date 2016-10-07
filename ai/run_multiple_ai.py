@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 import argparse
+import os
 import subprocess
 import sys; sys.path.append('../clients/')
 
@@ -25,9 +26,14 @@ for i in range(args.num_ai):
     else:
         keys.append(resp.split()[-1])
 
+try:
+    os.mkdir(os.path.join(os.getcwd(), 'out'))
+except:
+    pass
+
 for key in keys:
     print 'enter city name for {}'.format(key)
     city_name = raw_input()
     cmd = ['python', 'run_ai.py', args.host, str(args.port), key, city_name]
-    cmd.extend(['>', 'ai_{}.out'.format(key)])
+    cmd.extend(['>', 'out/ai_{}.out'.format(key)])
     subprocess.Popen(' '.join(cmd), shell=True)
