@@ -154,7 +154,6 @@ struct battle_arg {
   City *from_city;
   City *to_city;
   int num_attacking;
-  int num_defending;
   struct event *event_p;
 };
 
@@ -191,7 +190,8 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
 
   struct battle_arg *args = (struct battle_arg *) arg;
 
-  Battle b(args->num_attacking, args->num_defending, args->to_city->get_level());
+  int num_defending = args->to_city->get_soldiers();
+  Battle b(args->num_attacking, num_defending, args->to_city->get_level());
 
   int attacker_capacity = b.attackers_remaining() * 2;
   int gold_taken = args->to_city->change_gold(-attacker_capacity);
@@ -200,7 +200,7 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
 
   args->to_city->add_attack_notification(true, args->from_city->get_name(),
       args->num_attacking, b.attackers_remaining(), gold_taken,
-      args->num_defending, b.defenders_remaining());
+      num_defending, b.defenders_remaining());
 
   // TODO: create event to notifier the attacker
   struct timeval tv;
@@ -213,7 +213,7 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
   battle_result_args->num_attacking = args->num_attacking;
   battle_result_args->attackers_remaining = b.attackers_remaining();
   battle_result_args->gold_taken = gold_taken;
-  battle_result_args->num_defending = args->num_defending;
+  battle_result_args->num_defending = num_defending;
   battle_result_args->defenders_remaining = b.defenders_remaining();
 
   struct event *battle_result_event;
@@ -262,7 +262,6 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_str,
   if (to_city->get_name().compare(from_city.get_name()) == 0) {
     return "ATTACK FAILURE Cannot attack your own city\n";
   }
-  int num_defending = to_city->get_soldiers();
 
   // remove soldiers from attacking city
   from_city.change_soldiers(-num_attacking);
@@ -276,7 +275,6 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_str,
   battle_args->from_city = &from_city;
   battle_args->to_city = to_city;
   battle_args->num_attacking = num_attacking;
-  battle_args->num_defending = num_defending;
 
   struct event *battle_event;
   battle_event = evtimer_new(EventManager::base, battle_callback, (void *) battle_args);
