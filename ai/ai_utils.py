@@ -2,7 +2,7 @@
 def parse_world(string):
     '''
     Returns a list of tuples:
-        (city_name, city_id, city_level, distance to city)
+        (city_name, city_id, city_level)
     '''
     try:
         city_strings = string.strip().split('\n')
@@ -14,9 +14,8 @@ def parse_world(string):
             name = split[0]
             city_id = int(split[1][1:-1])
             level = int(split[2])
-            distance = float(split[3])
 
-            cities.append((name, city_id, level, distance))
+            cities.append((name, city_id, level))
 
         return cities
 

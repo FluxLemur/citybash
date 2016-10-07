@@ -25,9 +25,6 @@ and capabilities.
   - Attack other cities
 
 ## Gameplay
-- World layout
-  - Cities are placed at random in a 2D space such that distances between cities are variable.
-  - Among the cities that belong to players, the world _may_ also contains some randomly placed NPC cities.
 - Gold Usage
   - Each city has a base income of gold at the start of the game.
   - A player can spend gold to:
@@ -87,7 +84,7 @@ The valid player commands are (_not_ case sensitive):
 The server response is given below each respective player message.
   - `[player key] WORLD`
     - `WORLD`
-    - `[city name] ([city id]) [city level] [distance to city]`
+    - `[city name] ([city id]) [city level]`
     - ... (newline delimited)
   - `[player key] CITY`
     - `CITY [city name]`
