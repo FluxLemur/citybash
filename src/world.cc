@@ -193,7 +193,7 @@ void World::battle_callback(evutil_socket_t listener, short event, void *arg) {
   int num_defending = args->to_city->get_soldiers();
   Battle b(args->num_attacking, num_defending, args->to_city->get_level());
 
-  int attacker_capacity = b.attackers_remaining() * 2;
+  int attacker_capacity = b.attackers_remaining() * 3;
   int gold_taken = args->to_city->change_gold(-attacker_capacity);
 
   args->to_city->set_soldiers(b.defenders_remaining());

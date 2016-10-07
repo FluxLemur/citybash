@@ -55,6 +55,7 @@ and capabilities.
 - Armies
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers are trained asynchronously.
   - Armies move 1 distance unit/sec
+  - Soldiers can carry at most 3 gold each
 
 City Level | Income (gold/s) | Defense Multiplier | Upgrade Cost (gold) | Cache size (gold) |
 ---------- | --------------- | ------------------ | ------------ | ---------- |
