@@ -1,47 +1,39 @@
-<!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on https://github.com/jonrohan -->
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
-  <link rel="stylesheet" href="stylesheets/github-dark.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-  <title>Citybash</title>
-  <meta name="description" content="A simple real-time strategy game with a sever-side engine.">
+    <title>Citybash by FluxLemur</title>
+  </head>
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-</head>
-
-<body>
-
-  <div class="wrapper">
+  <body>
     <header>
-      <h1 class="title">Citybash</h1>
+      <div class="inner">
+        <h1>Citybash</h1>
+        <h2>A simple real-time strategy game with a sever-side engine.</h2>
+        <a href="https://github.com/FluxLemur/citybash" class="button"><small>View project on</small> GitHub</a>
+      </div>
     </header>
-    <div id="container">
-      <p class="tagline">A simple real-time strategy game with a sever-side engine.</p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/FluxLemur/citybash/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/FluxLemur/citybash/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/FluxLemur/citybash" class="code">View Citybash on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
           <h1>
 <a id="citybash" class="anchor" href="#citybash" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CityBash</h1>
 
 <p>CityBash is simple <a href="https://en.wikipedia.org/wiki/Real-time_strategy">real time strategy
-game</a> written as a server to
-facilitate the implementation and integration of AI players.</p>
+game</a> implemented as a
+stand-alone server to facilitate integration of AI players.</p>
 
 <ol>
 <li><a href="#overview">Overview</a></li>
@@ -56,7 +48,9 @@ facilitate the implementation and integration of AI players.</p>
 <h2>
 <a id="overview" class="anchor" href="#overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>The player controls <em>one</em> city with assets and capabilities.</p>
+<p>CityBash has no front end. The player sends commands to a game server running
+on a certain host and port, and is in control of <em>one</em> city with some assets
+and capabilities.</p>
 
 <ul>
 <li>Assets
@@ -80,22 +74,15 @@ facilitate the implementation and integration of AI players.</p>
 <a id="gameplay" class="anchor" href="#gameplay" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gameplay</h2>
 
 <ul>
-<li>World layout
-
-<ul>
-<li>Cities are placed at random in a 2D space such that distances between cities are variable.</li>
-<li>Among the cities that belong to players, the world <em>may</em> also contains some randomly placed NPC cities.</li>
-</ul>
-</li>
 <li>Gold Usage
 
 <ul>
-<li>Each city has a base income rate of gold at the start of the game.</li>
-<li>A player can spend gold to increase their:
+<li>Each city has a base income of gold at the start of the game.</li>
+<li>A player can spend gold to:
 
 <ul>
-<li>City level</li>
-<li>Military power</li>
+<li>Increase city level</li>
+<li>Train soldiers</li>
 </ul>
 </li>
 </ul>
@@ -111,15 +98,17 @@ facilitate the implementation and integration of AI players.</p>
 <li>Military
 
 <ul>
-<li>The city houses a player's army. Take city A that has 20 soldiers.</li>
-<li>An attack happens in 3 steps. Let’s say city A orders 10 soldiers to attack on city B (the other 10 will remain defending the city).
+<li>The city houses a player's army.</li>
+<li>Consider a scenario below in which City A start with 20 soldiers.</li>
+<li>An attack happens in 3 steps. Let’s say city A orders 10 soldiers to attack city B (the other 10 will remain defending the city).
 
 <ol>
-<li>Nothing happens for some time <code>T_ab</code>, proportional to the distance between cities A and B. The army is moving.</li>
-<li>The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them. Some of B's gold is safely hidden in it's <em>cache</em>. NOTE, gold is automatically stored in a city's cache.</li>
-<li>After <code>T_ab</code> more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.</li>
+<li>Nothing happens for 5 seconds. The army is moving from A to B.</li>
+<li>The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them (at most 3 gold for each soldier). Some of B's gold is safely hidden in it's <em>cache</em> (gold is automatically stored in a city's cache).</li>
+<li>After 5 more seconds, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.</li>
 </ol>
 </li>
+<li>Run <code>simulations/battle_sim.py</code> for some examples.</li>
 </ul>
 </li>
 <li>Ending Conditions
@@ -129,10 +118,9 @@ facilitate the implementation and integration of AI players.</p>
 
 <ol>
 <li>A player upgrades to a level 5 city</li>
-<li>20 minutes have passed</li>
+<li>The admin terminates after some amount of time (say, 10 minutes)</li>
 </ol>
 </li>
-<li>Players are awarded points based on city level, gold, and army size, and then ranked by point-count.</li>
 </ul>
 </li>
 </ul>
@@ -141,14 +129,11 @@ facilitate the implementation and integration of AI players.</p>
 <a id="game-mechanics" class="anchor" href="#game-mechanics" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Game Mechanics</h2>
 
 <ul>
-<li>Cities are placed at random on a 20x20 square world.</li>
 <li>Armies
 
 <ul>
-<li>See <code>simulations/battle_sim.py</code>
-</li>
-<li>Training a soldier costs 5 gold and takes 5 seconds. Soldiers can be trained asynchronously.</li>
-<li>Armies move 1 distance unit/sec</li>
+<li>Training a soldier costs 5 gold and takes 5 seconds. Soldiers are trained asynchronously.</li>
+<li>Soldiers can carry at most 3 gold each</li>
 </ul>
 </li>
 </ul>
@@ -206,7 +191,8 @@ facilitate the implementation and integration of AI players.</p>
 key which the player uses to join the game with the following command:</p>
 
 <ul>
-<li><code>[player key] join [city name]</code></li>
+<li>
+<code>[player key] join [city_name]</code> (note that <code>city_name</code> cannot have spaces)</li>
 </ul>
 
 <p>Once the game begins, players can send a selection of commands to list
@@ -241,6 +227,11 @@ their city, train soldiers, and make attacks.</p>
 </li>
 <li>
 <code>ATTACK city #</code> or <code>A city #</code>
+
+<ul>
+<li>
+<code>city</code> can be either a city name or a city id</li>
+</ul>
 </li>
 </ul>
 
@@ -251,7 +242,8 @@ their city, train soldiers, and make attacks.</p>
 <code>[player key] WORLD</code>
 
 <ul>
-<li><code>[city name] ([city id]) [city level] [distance to city]</code></li>
+<li><code>WORLD</code></li>
+<li><code>[city name] ([city id]) [city level]</code></li>
 <li>... (newline delimited)</li>
 </ul>
 </li>
@@ -259,18 +251,19 @@ their city, train soldiers, and make attacks.</p>
 <code>[player key] CITY</code>
 
 <ul>
+<li><code>CITY [city name]</code></li>
 <li><code>LEVEL [current city level]</code></li>
 <li><code>GOLD [current gold amount]</code></li>
 <li><code>INCOME [current gold income]</code></li>
 <li><code>ARMY [# of soldiers in city]</code></li>
 <li>
-<code>[list of notifcations]</code> of the form <code>* [#] sec ago: [contents]</code>, where <code>[contents]</code> is of the form:
+<code>[list of notifcations]</code> with each item of the form <code>* [#] sec ago: [contents]</code>. The <code>[contents]</code> can be one of two options:
 
 <ul>
 <li>
 <code>[city name] attacked [#]/[#] took [#] gold, [#]/[#] defenders remained</code> These are for attacks on your city</li>
 <li>
-<code>Attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}</code> These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in <code>{}</code> is included</li>
+<code>attacked [city name] [#]/[#] took [#] gold{, [#]/[#] defenders remained}</code> These are for attacks by your city on other cities. If you have at least 1 soldier remaining, the part of the message enclosed in <code>{}</code> is included</li>
 </ul>
 </li>
 </ul>
@@ -279,13 +272,14 @@ their city, train soldiers, and make attacks.</p>
 <code>[player key] SHORTCITY</code>
 
 <ul>
-<li><code>LEVEL [#], GOLD [#], INCOME [#], ARMY [#]</code></li>
+<li><code>SHORTCITY [name] LEVEL [#], GOLD [#], INCOME [#], ARMY [#]</code></li>
 </ul>
 </li>
 <li>
 <code>[player key] COSTS</code>
 
 <ul>
+<li><code>COSTS</code></li>
 <li><code>UPGRADE [gold to upgrade city] gold, [time to upgrade city] sec</code></li>
 <li><code>TRAIN [gold to train soldier] gold, [time to train soldier] sec</code></li>
 </ul>
@@ -330,15 +324,15 @@ if syntax is invalid (not 4 tokens or # soldiers is not a positive integer)</li>
 <code>ATTACK FAILURE No city [city-name]</code>, or</li>
 <li>
 <code>ATTACK FAILURE [# soldiers] &gt; [# soldiers in city]</code>, or</li>
-<li><code>ATTACK SUCCESS [city-name] [# soldiers]</code></li>
+<li><code>ATTACK SENT TO [city-name] [# soldiers]</code></li>
 </ul>
 </li>
 </ul>
 
-<p>After the round-trip time for the attack, a notification is added to your city:
-    - <code>ATTACK {WIN, LOSE} [#]/[#] return with [#] gold, [city-name] remaining: [#]/[#]</code>
-       if none of the previous cases apply. If 0 soldiers return, the part of
-       the message including and after the <code>,</code> is ommitted.</p>
+<p>After the round-trip time for the attack, a notification will appear in your
+<code>CITY</code> response (as above). If you have many new notifications, they will all
+be displayed. However, if there are no new notifications, only the 3 most recent
+notifications will be displayed.</p>
 
 <p>When the game is over, the server rejects player commands, and the
 administrator can announce the results.</p>
@@ -351,8 +345,8 @@ can use to connect to the game server.</p>
 
 <p>NOTE: the script has a dependency on
 <a href="https://github.com/hanslub42/rlwrap"><code>rlwrap</code></a>, a readline wrapper for user
-input. It can easily be installed with <code>apt-get</code>. If you prefer not to use it,
-edit <code>run_client.sh</code> and remove it.</p>
+input. It can easily be installed with <code>apt-get</code> or <code>brew</code>. If you prefer not to
+use it, edit <code>run_client.sh</code> and remove it.</p>
 
 <h2>
 <a id="running-the-server" class="anchor" href="#running-the-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running the Server</h2>
@@ -366,41 +360,45 @@ dependencies:</p>
 </ul>
 
 <p>The following steps will get a server up and running:</p>
+
 <ol>
-  <li> <code>make</code> creates the <code>citybash</code> binary - this is the server.</li>
-  <li> <code>./citybash 123</code> starts the server with an admin key of <code>123</code> (you can use whatever you like)</li>
-  <li> <code>cd clients/ &amp;&amp; ./admin_client.sh</code> This will connect you to a the citybash server (which should running on localhost at port 12345). Send admin commands by prepending the admin key <code>123</code>.</li>
-  <li> See <code>src/game_state.h</code> for valid admin commands.</li>
+<li>
+<code>make</code> creates the <code>citybash</code> binary - this is the server.</li>
+<li>
+<code>./citybash 123</code> starts the server with an admin key of <code>123</code> (you can use whatever you like)</li>
+<li>
+<code>cd clients/ &amp;&amp; ./admin_client.sh</code> This will connect you to a the citybash server (which should running on localhost at port 12345). Send admin commands by prepending the admin key <code>123</code>.</li>
+<li>See <code>src/game_state.h</code> for valid admin commands (or send some random string
+and the server will respond with the valid commands).</li>
 </ol>
 
 <h2>
 <a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Implementation</h2>
 
-<p>The engine is implemented in C++. We attempt to follow the
+<p>The engine is implemented in C++. I attempt to follow the
 <a href="https://google.github.io/styleguide/cppguide.html">Google C++ Style Guide</a>.</p>
 
 <p>Simulations of the game mechanics are in Python (see <code>simulations/</code>). A guiding
 philosophy is that decisions should be "data-informed" rather than arbitrary.</p>
-        </article>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/FluxLemur/citybash/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/FluxLemur/citybash/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/FluxLemur/citybash"></a> is maintained by <a href="https://github.com/FluxLemur">FluxLemur</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
       </div>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/FluxLemur" class="avatar"><img src="https://avatars1.githubusercontent.com/u/3722153?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/FluxLemur">FluxLemur</a> maintains <a href="https://github.com/FluxLemur/citybash">Citybash</a></p>
-
-
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/FluxLemur/citybash/tarball/master" class="tar">tar</a><a href="https://github.com/FluxLemur/citybash/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
 
   
-</body>
+  </body>
 </html>
