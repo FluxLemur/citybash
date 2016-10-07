@@ -41,9 +41,9 @@ and capabilities.
   - The city houses a player's army.
   - Consider a scenario below in which City A start with 20 soldiers.
   - An attack happens in 3 steps. Let’s say city A orders 10 soldiers to attack city B (the other 10 will remain defending the city).
-    1. Nothing happens for some time `T_ab`, proportional to the distance between cities A and B. The army is moving.
-    2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them. Some of B's gold is safely hidden in it's _cache_ (gold is automatically stored in a city's cache).
-    3. After `T_ab` more time, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
+    1. Nothing happens for 5 seconds. The army is moving from A to B.
+    2. The 10 soliders of A's army attack the soliders that are currently in B's city. Both sides sustain losses. If the attackers succeed, they take some gold with them (at most 3 gold for each soldier). Some of B's gold is safely hidden in it's _cache_ (gold is automatically stored in a city's cache).
+    3. After 5 more seconds, the remaining soliders of the original 10 return to city A. If they are carrying gold from a successful attack, the gold is added to A’s hold.
   - Run `simulations/battle_sim.py` for some examples.
 - Ending Conditions
   - The game stops when either:
@@ -51,10 +51,8 @@ and capabilities.
     2. The admin terminates after some amount of time (say, 10 minutes)
 
 ## Game Mechanics
-- Cities are placed at random on a 20x20 square world.
 - Armies
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers are trained asynchronously.
-  - Armies move 1 distance unit/sec
   - Soldiers can carry at most 3 gold each
 
 City Level | Income (gold/s) | Defense Multiplier | Upgrade Cost (gold) | Cache size (gold) |

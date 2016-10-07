@@ -100,13 +100,11 @@ std::string City::display_all_neighbor_info() {
   for (auto it = neighbors_.begin(); it != neighbors_.end(); it++) {
     if (it->first) {
       City& other_city = *(it->first);
-      float distance_to = it->second;
 
       // id [id] [other name] [other level] [distance from this to other]
       info_str += other_city.get_name();
       info_str += " (" + std::to_string(other_city.get_id()) + ") ";
-      info_str += std::to_string(other_city.level_) + " ";
-      info_str += std::to_string(distance_to) + "\n";
+      info_str += std::to_string(other_city.level_) + "\n";
     }
   }
 

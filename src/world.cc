@@ -268,7 +268,7 @@ std::string World::city_attack(city_id from_city_id, std::string to_city_str,
 
   // schedule callback to do battle
   struct timeval tv;
-  tv.tv_sec = int(from_city.distance_to(to_city));
+  tv.tv_sec = 5;
   tv.tv_usec = 0;
 
   struct battle_arg *battle_args = new battle_arg;
