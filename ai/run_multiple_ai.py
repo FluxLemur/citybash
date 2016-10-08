@@ -17,10 +17,10 @@ parser.add_argument('num_ai', type=int)
 args = parser.parse_args()
 
 keys = []
-msg = '{} key\n'.format(args.admin_key)
+key_msg = '{} key\n'.format(args.admin_key)
 
 for i in range(args.num_ai):
-    resp = send_command(args.host, args.port, msg)
+    resp = send_command(args.host, args.port, key_msg)
     if resp == None:
         raise IOError('Cannot connect to {} {}'.format(args.host, args.port))
     else:

@@ -53,6 +53,9 @@ class SimpleAI:
 
 
     def add_response(self, resp):
+        if resp is None:
+            return
+
         if resp.startswith('WORLD'):
             self.other_cities = ai_utils.parse_world(resp)
 

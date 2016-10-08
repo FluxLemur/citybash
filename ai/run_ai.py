@@ -17,13 +17,19 @@ key = args.player_key
 name = args.city_name_no_spaces
 
 print 'Running SimpleAI...'
-print send_command(args.host, args.port, '{} JOIN {}\n'.format(key, name))
+resp = send_command(args.host, args.port, '{} JOIN {}\n'.format(key, name))
+if 'ERROR' in resp:
+    print resp
+    exit(1)
 
 # wait for the game to start
 while True:
     time.sleep(0.5)
     resp = send_command(args.host, args.port, key + ' city\n')
     print resp
+    if resp is None:
+        continue
+
     if 'ERROR' not in resp and 'INVALID' not in resp:
         break
 
