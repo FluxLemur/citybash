@@ -6,30 +6,30 @@ class TestAiUtilParsing(unittest.TestCase):
     def test_parse_world(self):
         string = '\n'.join([
             'WORLD',
-            'A (0) 1 9.899495',
-            'B (1) 1 6.324555',
+            'A (0) 1',
+            'B (1) 1',
             '',
             ])
         out = ai_utils.parse_world(string)
 
-        self.assertEqual(out[0], ('A', 0, 1, 9.899495))
-        self.assertEqual(out[1], ('B', 1, 1, 6.324555))
+        self.assertEqual(out[0], ('A', 0, 1))
+        self.assertEqual(out[1], ('B', 1, 1))
 
         string = '\n'.join([
             'WORLD',
-            'AKJNSDKJAN (120) 2 92.519415',
-            'KAJDFN (1) 4 0.0000001',
-            'ZZ (20) 4 5.0',
-            'AA (3) 1 500.0',
+            'AKJNSDKJAN (120) 2',
+            'KAJDFN (1) 4',
+            'ZZ (20) 4',
+            'AA (3) 1',
             '',
             ])
 
         out = ai_utils.parse_world(string)
         self.assertEqual(4, len(out))
-        self.assertEqual(out[0], ('AKJNSDKJAN', 120, 2, 92.519415))
-        self.assertEqual(out[1], ('KAJDFN', 1, 4, 0.0000001))
-        self.assertEqual(out[2], ('ZZ', 20, 4, 5.0))
-        self.assertEqual(out[3], ('AA', 3, 1, 500.0))
+        self.assertEqual(out[0], ('AKJNSDKJAN', 120, 2))
+        self.assertEqual(out[1], ('KAJDFN', 1, 4))
+        self.assertEqual(out[2], ('ZZ', 20, 4))
+        self.assertEqual(out[3], ('AA', 3, 1))
 
 
     def test_parse_city(self):
