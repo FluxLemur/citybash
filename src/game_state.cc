@@ -114,7 +114,8 @@ std::string GameState::admin_start_game() {
 
   for (auto it = city_map_.begin(); it != city_map_.end(); it++) {
     if (!world_.city_id_exists(it->second)) {
-      std::cout << "Erasing city id for key " + it->first << std::endl;
+      std::cout << "Erasing city id " << (int) it->second << " for key " +
+          it->first << std::endl;
       city_map_.erase(it);
     }
   }
