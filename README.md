@@ -52,12 +52,12 @@ and capabilities.
   - Training a soldier costs 5 gold and takes 5 seconds. Soldiers are trained asynchronously.
   - Soldiers can carry at most 3 gold each
 
-City Level | Income (gold/s) | Defense Multiplier | Upgrade Cost (gold) | Cache size (gold) |
+City Level | Income (gold/s) | Defense Multiplier | Upgrade Cost (gold, time) | Cache size (gold) |
 ---------- | --------------- | ------------------ | ------------ | ---------- |
-1 | 1 | 1.2 | 30  | 5   |
-2 | 2 | 1.3 | 90  | 15  |
-3 | 3 | 1.4 | 270 | 45  |
-4 | 5 | 1.5 | 810 | 135 |
+1 | 1 | 1.1  | 30, 20  | 5   |
+2 | 2 | 1.15 | 90, 30  | 15  |
+3 | 3 | 1.2  | 270, 40 | 45  |
+4 | 5 | 1.25 | 810, 50 | 135 |
 
 - Note that as soon as a city becomes level 5, the game is over.
 

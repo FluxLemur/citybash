@@ -3,7 +3,7 @@
 
 Battle::Battle(int num_attackers, int num_defenders, int defender_level) {
   float multiplier = (float) City::defense_multiplier[defender_level - 1];
-  float defender_power = num_defenders * multiplier;
+  float defender_power = num_defenders * multiplier + 1;
   float total_power = num_attackers + defender_power;
 
 

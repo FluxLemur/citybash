@@ -5,14 +5,14 @@
 #include "event_manager.h"
 
 int City::cache_[] = {5, 15, 45, 135};
-double City::defense_multiplier[] = {1.2, 1.3, 1.4, 1.5};
+double City::defense_multiplier[] = {1.1, 1.15, 1.2, 1.25};
 city_id City::INVALID_CITY = -1;
 city_id City::current_id = -1;
 City * City::winning_city;
 
 int City::incomes_[] = {1, 2, 3, 5};
 int City::upgrade_costs_[] = {30, 90, 270, 810};
-int City::upgrade_times_[] = {5, 10, 15, 20};
+int City::upgrade_times_[] = {10, 20, 30, 40};
 int City::train_time_ = 5;
 int City::train_cost_ = 5;
 

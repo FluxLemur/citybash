@@ -44,12 +44,14 @@ class SimpleAI:
             n = random.randint(1, self.army)
             return 'attack {} {}'.format(city, n)
 
+        elif self.gold > self.upgrade_cost:
+            return 'upgrade'
+
         elif self.gold > self.train_cost and \
                 self.turn % 2 == random.randint(0, 2):
-            return 'train max'
+            return 'train {}'.format(self.gold / 5 / 3)
 
-        else:
-            return 'city'
+        return 'city'
 
 
     def add_response(self, resp):
