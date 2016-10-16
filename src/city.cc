@@ -329,7 +329,7 @@ int City::get_soldiers() {
 }
 
 void City::change_soldiers(int n) {
-  soldiers_ += n;
+  set_soldiers(soldiers_ + n);
 }
 
 void City::set_soldiers(int n) {
