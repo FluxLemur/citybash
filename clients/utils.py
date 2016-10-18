@@ -13,6 +13,7 @@ def send_command(host, port, message):
         return s.recv(2000)
     except socket.error:
         print 'ERROR: Cannot connect to {}:{}'.format(host, port)
+        return None
     except:
         raise
 
@@ -32,7 +33,11 @@ def run(host, port, key=None):
         print send_command(host, port, msg)
 
 def send_hello(host, port):
-    print send_command(host, port, 'CLIENT_HELLO %s\n' % socket.gethostname())
+    resp = send_command(host, port, 'CLIENT_HELLO %s\n' % socket.gethostname())
+    if resp is None:
+        exit(1)
+    else:
+        print resp
 
 def send_join(host, port, key, name):
     resp = send_command(host, port, '%s JOIN %s\n' %(key, name))
