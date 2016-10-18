@@ -141,7 +141,7 @@ Join the game (ask admin for the server ip and your player key):
 - `./run_client.sh server_ip 12345 player_key cool_city`
 
 In a separate terminal, once the game starts:
-- `clients/stat_client.py host_ip 12345 player_key`
+- `clients/stat_client.py server_ip 12345 player_key`
 
 Train some units:
 - `t 2` (train 2 units)
