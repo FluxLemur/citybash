@@ -348,6 +348,39 @@ can use to connect to the game server.</p>
 input. It can easily be installed with <code>apt-get</code> or <code>brew</code>. If you prefer not to
 use it, edit <code>run_client.sh</code> and remove it.</p>
 
+<h3>
+<a id="example-usage" class="anchor" href="#example-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example Usage</h3>
+
+<p>Join the game (ask admin for the server ip and your player key):</p>
+
+<ul>
+<li><code>./run_client.sh server_ip 12345 player_key cool_city</code></li>
+</ul>
+
+<p>In a separate terminal, once the game starts:</p>
+
+<ul>
+<li><code>clients/stat_client.py server_ip 12345 player_key</code></li>
+</ul>
+
+<p>Train some units:</p>
+
+<ul>
+<li>
+<code>t 2</code> (train 2 units)</li>
+</ul>
+
+<p>(5 seconds later you will see your army increase by 2 units).</p>
+
+<p>Take a look at the output of <code>stat_client</code> and pick a city to attack. For convenience, use the city id, the number in parentheses next to the city name.</p>
+
+<ul>
+<li>
+<code>a 1 2</code> (attack city id 1 with 2 soldiers)</li>
+</ul>
+
+<p>In 10 seconds, you'll see a notification pop up in <code>stat_client</code> with the battle details. (The defender will see their battle notification after only 5 seconds).</p>
+
 <h2>
 <a id="running-the-server" class="anchor" href="#running-the-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running the Server</h2>
 
