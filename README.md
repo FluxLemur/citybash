@@ -136,6 +136,23 @@ NOTE: the script has a dependency on
 input. It can easily be installed with `apt-get` or `brew`. If you prefer not to
 use it, edit `run_client.sh` and remove it.
 
+### Example Usage
+Join the game (ask admin for the server ip and your player key):
+- `./run_client.sh server_ip 12345 player_key cool_city`
+
+In a separate terminal, once the game starts:
+- `clients/stat_client.py host_ip 12345 player_key`
+
+Train some units:
+- `t 2` (train 2 units)
+
+(5 seconds later you will see your army increase by 2 units).
+
+Take a look at the output of `stat_client` and pick a city to attack. For convenience, use the city id, the number in parentheses next to the city name.
+- `a 1 2` (attack city id 1 with 2 soldiers)
+
+In 10 seconds, you'll see a notification pop up in `stat_client` with the battle details. (The defender will see their battle notification after only 5 seconds).
+
 ## Running the Server
 In order to build and run the server locally, you must first ensure you have the
 dependencies:
